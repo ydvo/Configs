@@ -8,6 +8,7 @@ local servers = {
   "autotools_ls",
   "matlab_ls",
   "hdl_checker",
+  "rust_analyzer",
 }
 
 local settings = {
