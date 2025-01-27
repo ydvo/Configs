@@ -97,3 +97,16 @@ keymap("n", "<C-m>", "<cmd>MatlabCliRunCell<CR>", term_opts)
 
 -- Write as sudo --
 keymap('c', 'w!!', "<esc>:lua require'user.utils'.sudo_write()<CR>", { silent = true })
+
+-- Vimspector Debug --
+keymap("n", "<leader>dd", "<cmd>call vimspector#Launch()<CR>", opts)
+keymap("n", "<leader>de", "<cmd>call vimspector#Reset()<CR>", opts)
+keymap("n", "<leader>dc", "<cmd>call vimspector#Continue()<CR>", opts)
+
+keymap("n", "<leader>db", "<cmd>call vimspector#ToggleBreakpoint()<CR>", opts)
+keymap("n", "<leader>dB", "<cmd>call vimspector#ClearBreakpoints()<CR>", opts)
+
+keymap("n", "<leader>dk", "<Plug>VimspectorRestart", opts)
+keymap("n", "<leader>dh", "<Plug>VimspectorStepOut", opts)
+keymap("n", "<leader>dl", "<Plug>VimspectorStepInto", opts)
+keymap("n", "<leader>dj", "<Plug>VimspectorStepOver", opts)
