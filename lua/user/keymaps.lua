@@ -81,6 +81,7 @@ keymap("t", "<C-h>", "<C-\\><C-N><C-w>h", term_opts)
 keymap("t", "<C-j>", "<C-\\><C-N><C-w>j", term_opts)
 keymap("t", "<C-k>", "<C-\\><C-N><C-w>k", term_opts)
 keymap("t", "<C-l>", "<C-\\><C-N><C-w>l", term_opts)
+keymap("t", "<ESC>", "<C-\\><C-N>", term_opts)
 
 -- Telescope --
 keymap("n", "<leader>ff", "<cmd>lua require'telescope.builtin'.find_files(require('telescope.themes').get_dropdown({ previewer = false }))<cr>", { noremap = true, silent = true, desc = "Find file" }
@@ -110,3 +111,8 @@ keymap("n", "<leader>dk", "<Plug>VimspectorRestart", opts)
 keymap("n", "<leader>dh", "<Plug>VimspectorStepOut", opts)
 keymap("n", "<leader>dl", "<Plug>VimspectorStepInto", opts)
 keymap("n", "<leader>dj", "<Plug>VimspectorStepOver", opts)
+
+-- Nuake --
+keymap("n", "~~", "<cmd>Nuake<CR>", opts)
+keymap("i", "~~", "<cmd>Nuake<CR>", opts)
+keymap("t", "~~", "<C-\\><C-N><cmd>Nuake<CR>", term_opts)

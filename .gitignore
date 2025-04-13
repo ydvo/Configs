@@ -1,2 +1,5 @@
 -- old backup
 lua/user/plugins.lua.bak
+
+-- credentials
+./credentials

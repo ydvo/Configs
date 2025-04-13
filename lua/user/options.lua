@@ -40,3 +40,13 @@ vim.opt.shortmess:append "c"
 vim.cmd "set whichwrap+=<,>,[,],h,l"
 vim.cmd [[set iskeyword+=-]]
 vim.cmd [[set formatoptions-=cro]] -- TODO: this doesn't seem to work
+
+--  vars for gdoc plugin
+-- Set the path to the credentials file
+vim.g.path_to_creds = '~/.config/nvim/.credentials/client_secret_813265339862-rph7c68ug0n8br57eavofi1j2t5el0g5.apps.googleusercontent.com.json'  -- Defaults to '~/.vim/credentials.json'
+
+-- Set the path for the gdoc file
+vim.g.gdoc_file_path = '~/config/nvim/gdoc/'                       -- Defaults to '~/.vim/'
+
+-- Set the token directory
+vim.g.token_directory = '~/config/nvim/gdoc/'                      -- Defaults to '~/.vim/'

@@ -177,6 +177,14 @@ local plugins = {
     event = "VeryLazy",
   },
 
+  {
+    'Aadv1k/gdoc.vim',
+  },
+
+  {
+    'lenowski/nuake',
+  },
+
 }
 
 local opts = {}
