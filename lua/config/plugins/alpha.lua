@@ -18,7 +18,7 @@ return {
       -- Set menu
       dashboard.section.buttons.val = {
         dashboard.button("e", "  > New file", ":ene <BAR> start <CR>"),
-        dashboard.button("SPC ff", "󰥨  > Find file", ":Telescope find_files <CR>"),
+        dashboard.button("SPC ff", "󰥨  > Find file", ":FzfLua files <CR>"),
         dashboard.button("u", "  > Update plugins", ":Lazy sync<CR>"),
         dashboard.button("s", "  > Settings", ":e $MYVIMRC | :cd %:p:h | wincmd k | pwd<CR>"),
         dashboard.button("q", "  > Quit NVIM", ":qa<CR>"),
