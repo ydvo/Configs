@@ -52,3 +52,6 @@ end)
 
 -- Terminal mode mapping: leave terminal or hide it (optional)
 set("t", "~~", "<C-\\><C-n>:hide<CR>")
+
+-- sc-im
+set('n', '<leader>sc', ":lua require'sc-im'.open_in_scim()<CR>", { desc = "Open sc-im", noremap = true, silent = true })
