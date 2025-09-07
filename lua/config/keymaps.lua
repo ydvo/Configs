@@ -70,9 +70,30 @@ local function autopair(open, close)
   end
 end
 
+-- Overtyping closers
+local function overtype(char)
+  return function()
+    local col = vim.fn.col('.')
+    local line = vim.fn.getline('.')
+    if line:sub(col, col) == char then
+      return "<Right>" -- move past existing closer
+    else
+      return char      -- insert it normally
+    end
+  end
+end
+
 -- Set mappings
 vim.keymap.set("i", "(", autopair("(", ")"), { expr = true })
 vim.keymap.set("i", "[", autopair("[", "]"), { expr = true })
 vim.keymap.set("i", "{", autopair("{", "}"), { expr = true })
 vim.keymap.set("i", "\"", autopair("\"", "\""), { expr = true })
 vim.keymap.set("i", "'", autopair("'", "'"), { expr = true })
+vim.keymap.set("i", "<", autopair("<", ">"), { expr = true })
+
+vim.keymap.set("i", ")", overtype(")"), { expr = true })
+vim.keymap.set("i", "]", overtype("]"), { expr = true })
+vim.keymap.set("i", "}", overtype("}"), { expr = true })
+vim.keymap.set("i", "\"", overtype("\""), { expr = true })
+vim.keymap.set("i", "'", overtype("'"), { expr = true })
+vim.keymap.set("i", ">", overtype(">"), { expr = true })
