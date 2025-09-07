@@ -1,8 +1,8 @@
 return {
   {
-    "ibhagwan/fzf-lua",
+    "ydvo/fzf-lua",
     -- optional for icon support
     dependencies = { "nvim-tree/nvim-web-devicons" },
-    opts = {}
+    opts = {},
   }
 }

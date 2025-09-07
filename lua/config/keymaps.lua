@@ -22,6 +22,9 @@ set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>")
 -- Oil
 set("n", "-", "<cmd>Oil<CR>")
 
+-- -- sc-im
+-- set('n', '<leader>sc', ":lua require'sc-im'.open_in_scim()<CR>", { desc = "Open sc-im", noremap = true, silent = true })
+
 -- Terminal
 local terminal_bufnr = nil
 
@@ -53,5 +56,23 @@ end)
 -- Terminal mode mapping: leave terminal or hide it (optional)
 set("t", "~~", "<C-\\><C-n>:hide<CR>")
 
--- sc-im
-set('n', '<leader>sc', ":lua require'sc-im'.open_in_scim()<CR>", { desc = "Open sc-im", noremap = true, silent = true })
+-- Auto-close pairs with space after opening in insert mode
+local function autopair(open, close)
+  return function()
+    local col = vim.fn.col('.')
+    local line = vim.fn.getline('.')
+    -- Check if cursor is at end or followed by whitespace
+    if col > #line or line:sub(col, col):match("%s") then
+      return open .. close .. "<Left>"
+    else
+      return open
+    end
+  end
+end
+
+-- Set mappings
+vim.keymap.set("i", "(", autopair("(", ")"), { expr = true })
+vim.keymap.set("i", "[", autopair("[", "]"), { expr = true })
+vim.keymap.set("i", "{", autopair("{", "}"), { expr = true })
+vim.keymap.set("i", "\"", autopair("\"", "\""), { expr = true })
+vim.keymap.set("i", "'", autopair("'", "'"), { expr = true })
