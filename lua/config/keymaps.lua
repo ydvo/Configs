@@ -1,4 +1,6 @@
 -- Keymaps
+local userfunctions = require("config.user_functions")
+
 local set = vim.keymap.set
 
 -- Execute
@@ -26,74 +28,33 @@ set("n", "-", "<cmd>Oil<CR>")
 -- set('n', '<leader>sc', ":lua require'sc-im'.open_in_scim()<CR>", { desc = "Open sc-im", noremap = true, silent = true })
 
 -- Terminal
-local terminal_bufnr = nil
+set("n", "~~", userfunctions.terminal_toggle())
 
-set("n", "~~", function()
-  if terminal_bufnr and vim.api.nvim_buf_is_valid(terminal_bufnr) then
-    -- If terminal already exists, go to it
-    for _, win in ipairs(vim.api.nvim_list_wins()) do
-      if vim.api.nvim_win_get_buf(win) == terminal_bufnr then
-        vim.api.nvim_set_current_win(win)
-        vim.cmd.startinsert()
-        return
-      end
-    end
-    -- Terminal buffer exists but not visible, open it in split
-    vim.cmd.new()
-    vim.api.nvim_win_set_buf(0, terminal_bufnr)
-    vim.api.nvim_win_set_height(0, 15)
-    vim.cmd.startinsert()
-  else
-    -- Terminal doesn't exist, create it
-    vim.cmd.new()
-    vim.cmd.term()
-    vim.api.nvim_win_set_height(0, 15)
-    vim.cmd.startinsert()
-    terminal_bufnr = vim.api.nvim_get_current_buf()
-  end
-end)
-
--- Terminal mode mapping: leave terminal or hide it (optional)
+-- Terminal mode mapping: leave terminal or hide it
 set("t", "~~", "<C-\\><C-n>:hide<CR>")
 
--- Auto-close pairs with space after opening in insert mode
-local function autopair(open, close)
-  return function()
-    local col = vim.fn.col('.')
-    local line = vim.fn.getline('.')
-    -- Check if cursor is at end or followed by whitespace
-    if col > #line or line:sub(col, col):match("%s") then
-      return open .. close .. "<Left>"
-    else
-      return open
-    end
-  end
-end
-
--- Overtyping closers
-local function overtype(char)
-  return function()
-    local col = vim.fn.col('.')
-    local line = vim.fn.getline('.')
-    if line:sub(col, col) == char then
-      return "<Right>" -- move past existing closer
-    else
-      return char      -- insert it normally
-    end
-  end
-end
 
 -- Set mappings
-vim.keymap.set("i", "(", autopair("(", ")"), { expr = true })
-vim.keymap.set("i", "[", autopair("[", "]"), { expr = true })
-vim.keymap.set("i", "{", autopair("{", "}"), { expr = true })
-vim.keymap.set("i", "\"", autopair("\"", "\""), { expr = true })
-vim.keymap.set("i", "'", autopair("'", "'"), { expr = true })
-vim.keymap.set("i", "<", autopair("<", ">"), { expr = true })
+set("i", "(", userfunctions.autopair("(", ")"), { expr = true })
+set("i", "[", userfunctions.autopair("[", "]"), { expr = true })
+set("i", "{", userfunctions.autopair("{", "}"), { expr = true })
+set("i", "<", userfunctions.autopair("<", ">"), { expr = true })
 
-vim.keymap.set("i", ")", overtype(")"), { expr = true })
-vim.keymap.set("i", "]", overtype("]"), { expr = true })
-vim.keymap.set("i", "}", overtype("}"), { expr = true })
-vim.keymap.set("i", "\"", overtype("\""), { expr = true })
-vim.keymap.set("i", "'", overtype("'"), { expr = true })
-vim.keymap.set("i", ">", overtype(">"), { expr = true })
+set("i", ")", userfunctions.overtype(")"), { expr = true })
+set("i", "]", userfunctions.overtype("]"), { expr = true })
+set("i", "}", userfunctions.overtype("}"), { expr = true })
+set("i", ">", userfunctions.overtype(">"), { expr = true })
+
+set("i", "\"", userfunctions.autopair_quotes("\""), { expr = true })
+set("i", "'", userfunctions.autopair_quotes("'"), { expr = true })
+
+-- File specific keybings
+-- Rust
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "rust",
+  callback = function()
+    -- Build
+    vim.api.nvim_buf_set_keymap(0, "n", "<leader>b", ":make build<CR>", { noremap = true, silent = true })
+    vim.api.nvim_buf_set_keymap(0, "n", "<leader>B", ":make run<CR>", { noremap = true, silent = true })
+  end,
+})
