@@ -56,5 +56,14 @@ vim.api.nvim_create_autocmd("FileType", {
     -- Build
     vim.api.nvim_buf_set_keymap(0, "n", "<leader>b", ":make build<CR>", { noremap = true, silent = true })
     vim.api.nvim_buf_set_keymap(0, "n", "<leader>B", ":make run<CR>", { noremap = true, silent = true })
-  end,
+  end
+})
+
+-- Typst
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "typst",
+  callback = function()
+    -- Watch
+    set("n", "<leader>t", userfunctions.typstwatch(), { noremap = true, silent = true })
+  end
 })

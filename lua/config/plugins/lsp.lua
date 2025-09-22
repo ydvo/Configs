@@ -15,8 +15,15 @@ return {
       },
     },
     config = function()
-      require("lspconfig").lua_ls.setup {}
-      require("lspconfig").rust_analyzer.setup {}
+      -- define server configurations
+      vim.lsp.config("lua_ls", {})
+      vim.lsp.config("rust_analyzer", {})
+      vim.lsp.config("tinymist", {})
+
+      -- enable them
+      vim.lsp.enable("lua_ls")
+      vim.lsp.enable("rust_analyzer")
+      vim.lsp.enable("tinymist")
     end,
   }
 }
