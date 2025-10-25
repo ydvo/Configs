@@ -15,15 +15,39 @@ return {
       },
     },
     config = function()
-      -- define server configurations
-      vim.lsp.config("lua_ls", {})
-      vim.lsp.config("rust_analyzer", {})
-      vim.lsp.config("tinymist", {})
+      -- Server configs
+      vim.lsp.config('basedpyright', {
+        settings = {
+          basedpyright = {
+            analysis = {
+              -- make it less strict:
+              typeCheckingMode = "basic",       -- or "standard", or whatever level you prefer
+              diagnosticMode = "openFilesOnly", -- so only open files are checked
+              -- optionally override specific diagnostics
+              diagnosticSeverityOverrides = {
+                -- e.g. turn some errors into warnings or suppress them
+                reportMissingTypeStubs = "warning",
+                reportPrivateImportUsage = "none",
+              },
+            },
+          },
+        },
+      })
 
-      -- enable them
+      vim.lsp.config('tinymist', {
+        settings = {
+          formatterMode = "typstyle",
+        },
+      })
+
+      -- enable server configurations
       vim.lsp.enable("lua_ls")
       vim.lsp.enable("rust_analyzer")
       vim.lsp.enable("tinymist")
+      vim.lsp.enable("basedpyright")
+      vim.lsp.enable('ruff')
+      vim.lsp.enable('clangd')
+      vim.lsp.enable('clangd-format')
     end,
   }
 }

@@ -38,7 +38,6 @@ set("t", "~~", "<C-\\><C-n>:hide<CR>")
 set("i", "(", userfunctions.autopair("(", ")"), { expr = true })
 set("i", "[", userfunctions.autopair("[", "]"), { expr = true })
 set("i", "{", userfunctions.autopair("{", "}"), { expr = true })
-set("i", "<", userfunctions.autopair("<", ">"), { expr = true })
 
 set("i", ")", userfunctions.overtype(")"), { expr = true })
 set("i", "]", userfunctions.overtype("]"), { expr = true })
@@ -46,7 +45,6 @@ set("i", "}", userfunctions.overtype("}"), { expr = true })
 set("i", ">", userfunctions.overtype(">"), { expr = true })
 
 set("i", "\"", userfunctions.autopair_quotes("\""), { expr = true })
-set("i", "'", userfunctions.autopair_quotes("'"), { expr = true })
 
 -- File specific keybings
 -- Rust
@@ -65,5 +63,16 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function()
     -- Watch
     set("n", "<leader>t", userfunctions.typstwatch(), { noremap = true, silent = true })
+    -- $ autopair
+    set("i", "$", userfunctions.autopair_quotes("$"), { expr = true })
+  end
+})
+
+-- Python
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "python",
+  callback = function()
+    -- Run
+    set("n", "<leader>b", ":!python3 %<CR>", { noremap = true, silent = true })
   end
 })

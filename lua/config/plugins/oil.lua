@@ -8,7 +8,13 @@ return {
     lazy = false,
     config = function()
       require("oil").setup({
-        view_options = { show_hidden = true, },
+        -- view_options = { show_hidden = true, },
+        keymaps = {
+          ["<C-o>"] = function()
+            local file = require("oil").get_cursor_entry().name
+            vim.fn.jobstart({ "xdg-open", file }, { detach = true })
+          end,
+        },
       })
     end,
   }
