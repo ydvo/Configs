@@ -1,37 +1,47 @@
 return {
   "folke/trouble.nvim",
-  opts = {}, -- for default options, refer to the configuration section for custom setup.
+  opts = {}, -- default options, can be customized here
   cmd = "Trouble",
   keys = {
     {
       "<leader>xx",
-      "<cmd>Trouble diagnostics toggle<cr>",
+      function() require("trouble").toggle("diagnostics") end,
       desc = "Diagnostics (Trouble)",
     },
     {
       "<leader>xX",
-      "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+      function() require("trouble").toggle("diagnostics", { buffer = 0 }) end,
       desc = "Buffer Diagnostics (Trouble)",
     },
     {
       "<leader>cs",
-      "<cmd>Trouble symbols toggle focus=false<cr>",
+      function() require("trouble").toggle("symbols", { focus = false }) end,
       desc = "Symbols (Trouble)",
     },
     {
       "<leader>cl",
-      "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
-      desc = "LSP Definitions / references / ... (Trouble)",
+      function() require("trouble").toggle("lsp", { focus = false, position = "right" }) end,
+      desc = "LSP Definitions / References (Trouble)",
     },
     {
       "<leader>xL",
-      "<cmd>Trouble loclist toggle<cr>",
+      function() require("trouble").toggle("loclist") end,
       desc = "Location List (Trouble)",
     },
     {
       "<leader>xQ",
-      "<cmd>Trouble qflist toggle<cr>",
+      function() require("trouble").toggle("qflist") end,
       desc = "Quickfix List (Trouble)",
+    },
+    {
+      "<leader>xn",
+      function() require("trouble").next({ skip_groups = true, jump = true }) end,
+      desc = "Go to Next item (Trouble)",
+    },
+    {
+      "<leader>xp",
+      function() require("trouble").prev({ skip_groups = true, jump = true }) end,
+      desc = "Go to Previous item (Trouble)",
     },
   },
 }
