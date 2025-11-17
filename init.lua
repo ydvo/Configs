@@ -19,6 +19,7 @@ vim.opt.wrap = false              -- no line wrap
 vim.opt.scrolloff = 8             -- margin above/below cursor
 vim.opt.sidescrolloff = 8         -- margin left/right of cursor
 vim.opt.fillchars = { eob = " " } -- hide ~ on end of buffer
+vim.opt.exrc = true               -- allows local cfgs
 
 -- Requires
 require("config.lazy")
