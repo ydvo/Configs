@@ -47,7 +47,6 @@ return {
       vim.lsp.enable("basedpyright")
       vim.lsp.enable('ruff')
       vim.lsp.enable('clangd')
-      vim.lsp.enable('clangd-format')
     end,
   }
 }
