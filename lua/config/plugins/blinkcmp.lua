@@ -4,7 +4,12 @@ return {
 
     build = "cargo build --release",
 
-    dependencies = { 'rafamadriz/friendly-snippets' },
+    event = "InsertEnter",
+
+    dependencies = {
+      'rafamadriz/friendly-snippets',
+      'hrsh7th/nvim-cmp',
+    },
 
     opts = {
       -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
@@ -36,6 +41,5 @@ return {
       --Signature help
       signature = { enabled = true },
     },
-    opts_extend = { "sources.default" }
   }
 }
