@@ -40,6 +40,16 @@ return {
         },
       })
 
+      -- setup clang for use with esp-idf
+      vim.lsp.config("clangd", {
+        cmd = {
+          "/home/ydvo/.espressif/tools/esp-clang/esp-20.1.1_20250829/esp-clang/bin/clangd",
+          "--background-index",
+          "--compile-commands-dir=build.clang",
+          "--query-driver=/home/ydvo/.espressif/tools/**",
+        },
+      })
+
       -- enable server configurations
       vim.lsp.enable("lua_ls")
       vim.lsp.enable("rust_analyzer")
