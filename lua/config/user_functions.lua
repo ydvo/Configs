@@ -88,6 +88,47 @@ function M.typstwatch()
   end
 end
 
+-- Toggle Writing Mode
+local writing_mode = {
+  enabled = false,
+  background = nil,
+  colorscheme = nil,
+}
+
+function ToggleWritingMode()
+  if not writing_mode.enabled then
+    -- Save state
+    writing_mode.background = vim.o.background
+    writing_mode.colorscheme = vim.g.colors_name
+
+    -- Enable writing mode
+    vim.o.background = "light"
+    vim.cmd("colorscheme koda")
+
+    -- vim.cmd("ZenMode")
+    vim.cmd("PencilSoft")
+
+    writing_mode.enabled = true
+  else
+    -- Restore state
+    -- vim.cmd("ZenMode")
+    vim.cmd("PencilOff")
+
+    if writing_mode.background then
+      vim.o.background = writing_mode.background
+    end
+
+    if writing_mode.colorscheme then
+      vim.cmd("colorscheme " .. writing_mode.colorscheme)
+    end
+
+    writing_mode.enabled = false
+  end
+end
+
+-- Create callable command
+vim.api.nvim_create_user_command("WriteMode", ToggleWritingMode, {})
+
 -- AutoCommands
 -- Auto Format on save
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -95,19 +136,28 @@ vim.api.nvim_create_autocmd('LspAttach', {
     local client = vim.lsp.get_client_by_id(args.data.client_id)
     if not client then return end
 
+    -- Check for tinymist
     if client.name == "tinymist" then
       -- Force-enable formatting capability
       client.server_capabilities.documentFormattingProvider = true
       client.server_capabilities.documentRangeFormattingProvider = true
     end
 
-    -- Auto-format ("lint") on save.
-    -- Usually not needed if server supports "textDocument/willSaveWaitUntil".
+    -- ensure lsp supports formatting
     if client:supports_method('textDocument/formatting') then
+      -- create group to prevent duplicates
+      local group = vim.api.nvim_create_augroup(
+        "LspFormat_" .. args.buf,
+        { clear = true }
+      )
+
+      -- Auto-format ("lint") on save.
+      -- Usually not needed if server supports "textDocument/willSaveWaitUntil".
       vim.api.nvim_create_autocmd('BufWritePre', {
+        group = group,
         buffer = args.buf,
         callback = function()
-          print("Formating")
+          print("Formating...")
           vim.lsp.buf.format({ bufnr = args.buf, id = client.id, timeout_ms = 1000 })
         end,
       })

@@ -8,5 +8,11 @@ return {
   {
     "rebelot/kanagawa.nvim"
   },
+  {
+    "oskarnurm/koda.nvim"
+  },
+  {
+    "serhez/teide.nvim"
+  },
 
 }
