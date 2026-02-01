@@ -50,6 +50,18 @@ return {
         },
       })
 
+      -- setup sourcekit for use without dynamic registration from swift install instructions
+      vim.lsp.config("sourcekit", {
+        capabilities = {
+          workspace = {
+            didChangeWatchedFiles = {
+              dynamicRegistration = true,
+            },
+          },
+        },
+        filetypes = { 'swift' },
+      })
+
       -- enable server configurations
       vim.lsp.enable("lua_ls")
       vim.lsp.enable("rust_analyzer")
@@ -57,6 +69,8 @@ return {
       vim.lsp.enable("basedpyright")
       vim.lsp.enable('ruff')
       vim.lsp.enable('clangd')
+      vim.lsp.enable('sourcekit')
+      vim.lsp.enable('asm_lsp')
     end,
   }
 }
