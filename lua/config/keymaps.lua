@@ -20,6 +20,8 @@ set("n", "gl", "<cmd>lua vim.diagnostic.open_float()<CR>")
 
 -- LSP
 set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>")
+set("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", { desc = "Rename variable" })
+
 
 -- Oil
 set("n", "-", "<cmd>Oil<CR>")
@@ -45,6 +47,27 @@ set("i", "}", userfunctions.overtype("}"), { expr = true })
 set("i", ">", userfunctions.overtype(">"), { expr = true })
 
 set("i", "\"", userfunctions.autopair_quotes("\""), { expr = true })
+
+-- Briefly Show Line Numbers
+vim.api.nvim_set_keymap('n', '<leader>n', '', {
+  noremap = true,
+  silent = true,
+  desc = "Show Line Numbers",
+  callback = function()
+    -- vim.wo.number = true
+    vim.wo.relativenumber = true
+
+    -- Create an autocmd that disables numbers on the next cursor move
+    vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+      once = true, -- trigger only once
+      callback = function()
+        -- vim.wo.number = false
+        vim.wo.relativenumber = false
+      end,
+    })
+  end,
+})
+
 
 -- File specific keybings
 -- Rust
