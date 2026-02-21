@@ -14,6 +14,8 @@ set("n", "<leader>fg", require('fzf-lua').live_grep, { desc = "Live grep" })
 set("n", "<leader>fb", require('fzf-lua').buffers, { desc = "Search Buffers" })
 set("n", "<leader>fm", require('fzf-lua').marks, { desc = "Search marks" })
 set("n", "<leader>fh", require('fzf-lua').helptags, { desc = "Search help" })
+set("n", "<leader>fs", require('fzf-lua').lsp_document_symbols, { desc = "Search LSP symbols" })
+set("n", "<leader>fe", require('fzf-lua').lsp_document_diagnostics, { desc = "Search LSP diagnostics" })
 
 -- Diagnostic
 set("n", "gl", "<cmd>lua vim.diagnostic.open_float()<CR>")
@@ -21,6 +23,7 @@ set("n", "gl", "<cmd>lua vim.diagnostic.open_float()<CR>")
 -- LSP
 set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>")
 set("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", { desc = "Rename variable" })
+set("n", "<leader>h", "<cmd>LspClangdSwitchSourceHeader<CR>")
 
 
 -- Oil
@@ -49,7 +52,7 @@ set("i", ">", userfunctions.overtype(">"), { expr = true })
 set("i", "\"", userfunctions.autopair_quotes("\""), { expr = true })
 
 -- Briefly Show Line Numbers
-vim.api.nvim_set_keymap('n', '<leader>n', '', {
+set('n', '<leader>n', '', {
   noremap = true,
   silent = true,
   desc = "Show Line Numbers",
@@ -68,6 +71,22 @@ vim.api.nvim_set_keymap('n', '<leader>n', '', {
   end,
 })
 
+local numbers_on = false
+-- Toggle relative line numbers
+set('n', '<leader>N', '', {
+  noremap = true,
+  silent = true,
+  desc = "Toggle line numbers",
+  callback = function()
+    if numbers_on then
+      numbers_on = false
+      vim.wo.relativenumber = false
+    else
+      numbers_on = true
+      vim.wo.relativenumber = true
+    end
+  end,
+})
 
 -- File specific keybings
 -- Rust
