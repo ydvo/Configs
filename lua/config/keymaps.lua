@@ -8,6 +8,9 @@ set("n", "<space><space>x", "<cmd>source %<CR>")
 set("n", "<space>x", ":.lua<CR>")
 set("v", "<space>x", ":lua<CR>")
 
+-- Buffer
+set("n", "<leader>bd", "<cmd>bprevious <bar> bdelete #<CR>", { desc = "Delete buffer" })
+
 -- Fzf
 set("n", "<leader>ff", require('fzf-lua').files, { desc = "Fzf Files" })
 set("n", "<leader>fg", require('fzf-lua').live_grep, { desc = "Live grep" })
