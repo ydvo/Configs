@@ -1,37 +1,118 @@
 return {
-  {
-    'nvim-treesitter/nvim-treesitter',
-    build = ":TSUpdate",
-    config = function()
-      require'nvim-treesitter.configs'.setup {
-        -- A list of parser names, or "all" (the listed parsers MUST always be installed)
-        ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline" },
+  'nvim-treesitter/nvim-treesitter',
+  dependencies = {
+    {
+      'nvim-treesitter/nvim-treesitter-context',
+      opts = {
+        max_lines = 4,
+        multiline_threshold = 2,
+      },
+    },
+  },
+  lazy = false,
+  branch = 'main',
+  build = ':TSUpdate',
+  config = function()
+    local ts = require('nvim-treesitter')
 
-        -- Install parsers synchronously (only applied to `ensure_installed`)
-        sync_install = false,
+    -- State tracking for async parser loading
+    local parsers_loaded = {}
+    local parsers_pending = {}
+    local parsers_failed = {}
 
-        -- Automatically install missing parsers when entering buffer
-        -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
-        auto_install = true,
+    local ns = vim.api.nvim_create_namespace('treesitter.async')
 
-        -- List of parsers to ignore installing (or "all")
-        ignore_install = {},
-
-        ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
-        -- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
-
-        highlight = {
-          enable = true,
-          -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
-          disable = function(lang, buf)
-            local max_filesize = 100 * 1024 -- 100 KB
-            local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-            if ok and stats and stats.size > max_filesize then
-              return true
-            end
-          end,
-        },
-      }
+    -- Helper to start highlighting and indentation
+    local function start(buf, lang)
+      local ok = pcall(vim.treesitter.start, buf, lang)
+      if ok then
+        vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+      end
+      return ok
     end
-  }
+
+    -- Install core parsers after lazy.nvim finishes loading all plugins
+    vim.api.nvim_create_autocmd('User', {
+      pattern = 'LazyDone',
+      once = true,
+      callback = function()
+        ts.install({
+          'bash',
+          'gitignore',
+          'lua',
+          'luadoc',
+          'markdown',
+          'markdown_inline',
+          'python',
+          'typst',
+          'vim',
+          'vimdoc',
+          'c',
+        }, {
+          max_jobs = 8,
+        })
+      end,
+    })
+
+    -- Decoration provider for async parser loading
+    vim.api.nvim_set_decoration_provider(ns, {
+      on_start = vim.schedule_wrap(function()
+        if #parsers_pending == 0 then
+          return false
+        end
+        for _, data in ipairs(parsers_pending) do
+          if vim.api.nvim_buf_is_valid(data.buf) then
+            if start(data.buf, data.lang) then
+              parsers_loaded[data.lang] = true
+            else
+              parsers_failed[data.lang] = true
+            end
+          end
+        end
+        parsers_pending = {}
+      end),
+    })
+
+    local group = vim.api.nvim_create_augroup('TreesitterSetup', { clear = true })
+
+    local ignore_filetypes = {
+      'checkhealth',
+      'lazy',
+      'mason',
+      'fzf',
+      'notify',
+      'blink-cmp-menu',
+      'alpha',
+      'lazy_backdrop'
+    }
+
+    -- Auto-install parsers and enable highlighting on FileType
+    vim.api.nvim_create_autocmd('FileType', {
+      group = group,
+      desc = 'Enable treesitter highlighting and indentation (non-blocking)',
+      callback = function(event)
+        if vim.tbl_contains(ignore_filetypes, event.match) then
+          return
+        end
+
+        local lang = vim.treesitter.language.get_lang(event.match) or event.match
+        local buf = event.buf
+
+        if parsers_failed[lang] then
+          return
+        end
+
+        if parsers_loaded[lang] then
+          -- Parser already loaded, start immediately (fast path)
+          start(buf, lang)
+        else
+          -- Queue for async loading
+          table.insert(parsers_pending, { buf = buf, lang = lang })
+        end
+
+        -- Auto-install missing parsers (async, no-op if already installed)
+        ts.install({ lang })
+      end,
+    })
+  end,
 }
