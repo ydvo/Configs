@@ -1,0 +1,56 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_state\
+$git_status\
+$cmd_duration\
+$line_break\
+$python\
+$character"""
+
+add_newline = false
+
+[directory]
+truncation_length = 5           # Show more path context than default (3)
+truncate_to_repo = true         # Still truncate smartly in git repos
+style = "bright-blue"              # medium‑dark blue (looks good on Mint)
+read_only = "  "                  # optional lock icon for read‑only dirs
+
+[character]
+vimcmd_symbol = "[❮](green)"
+
+[git_branch]
+symbol = ""
+format = "[$symbol$branch]($style)"
+# style = "bright-black"
+
+[git_status]
+format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)]($ahead_behind$stashed)]($style)"
+# style = "cyan"
+conflicted = "​"
+untracked = "​"
+modified = "​"
+staged = "​"
+renamed = "​"
+deleted = "​"
+stashed = "≡"
+ahead = "↑"
+behind = "↓"
+
+[git_state]
+format = '\([$state( $progress_current/$progress_total)]($style)\) '
+style = "bright-black"
+
+[cmd_duration]
+format = " [$duration]($style) "
+style = "yellow"
+
+[python]
+format = "[$virtualenv]($style) "
+style = "bright-black"
+detect_extensions = []
+detect_files = []
