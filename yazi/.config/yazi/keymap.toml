@@ -1,5 +1,10 @@
 # yazi keymaps
 
 [[mgr.prepend_keymap]]
+on   = "o"
+run  = "create"
+desc = "Create file or directory"
+
+[[mgr.prepend_keymap]]
 on  = "M"
 run = "plugin mount"
