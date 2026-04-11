@@ -1,13 +1,13 @@
 :root {
-	--tab-active-bg-color: #4fa74f;
-	--tab-inactive-bg-color: #333;
-	--tab-active-fg-fallback-color: #eee;		/* color of text in an active tab without a container */
-	--tab-inactive-fg-fallback-color: #888;		/* color of text in an inactive tab without a container */
+	--tab-active-bg-color: #131313;
+	--tab-inactive-bg-color: #474747;
+	--tab-active-fg-fallback-color: #e2e2e2;		/* color of text in an active tab without a container */
+	--tab-inactive-fg-fallback-color: #c6c6c6;		/* color of text in an inactive tab without a container */
 	--urlbar-focused-bg-color: #41404c;
 	--urlbar-not-focused-bg-color: #1c1b22;
 	--toolbar-bgcolor: #2b2a33 !important;
-	--tab-font: 'DejaVu Sans Mono';
-	--urlbar-font: 'DejaVu Sans Mono';
+	/* --tab-font: 'DejaVu Sans Mono'; */
+	/* --urlbar-font: 'DejaVu Sans Mono'; */
 
 	/* try increasing if you encounter problems */
 	--urlbar-height-setting: 24px;
