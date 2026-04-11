@@ -78,7 +78,7 @@ output "eDP-1" {
     // Run `niri msg outputs` while inside a niri instance to list all outputs and their modes.
 
     // You can use integer or fractional scale, for example use 1.5 for 150% scale.
-    scale 2.25
+    scale 2
 
     // Transform allows to rotate the output counter-clockwise, valid values are:
     // normal, 90, 180, 270, flipped, flipped-90, flipped-180 and flipped-270.
@@ -101,7 +101,9 @@ output "eDP-1" {
 // https://yalter.github.io/niri/Configuration:-Layout
 layout {
     // Set gaps around windows in logical pixels.
-    gaps 5
+    gaps 2
+
+    empty-workspace-above-first
 
     // When to center a column when changing focus, options are:
     // - "never", default behavior, focusing an off-screen column will keep at the left
@@ -226,18 +228,42 @@ animations {
     slowdown 0.5
 }
 
-// Window rules let you adjust behavior for individual windows.
-// Find more information on the wiki:
-// https://yalter.github.io/niri/Configuration:-Window-Rules
+/***************
+* Window Rules
+****************/
 
 // Open the Firefox picture-in-picture player as floating by default.
 window-rule {
-    // This app-id regular expression will work for both:
-    // - host Firefox (app-id is "firefox")
-    // - Flatpak Firefox (app-id is "org.mozilla.firefox")
     match app-id=r#"firefox$"# title="^Picture-in-Picture$"
     open-floating true
 }
+
+window-rule {
+    match app-id="obsidian" 
+    default-column-width { proportion 0.33; }
+}
+window-rule {
+    match app-id="foot-yazi" 
+    default-window-height { proportion 0.5; }
+    default-column-width { proportion 0.5; }
+    open-floating true
+}
+window-rule {
+    match app-id="SpeedCrunch" 
+    default-window-height { proportion 0.5; }
+    default-column-width { proportion 0.25; }
+    open-floating true
+}
+window-rule {
+    match app-id="foot-btop" 
+    default-window-height { proportion 0.5; }
+    default-column-width { proportion 0.5; }
+    open-floating true
+}
+
+/***************
+* Keybinds
+****************/
 
 binds {
     // Keys consist of modifiers separated by + signs, followed by an XKB key name
@@ -254,37 +280,35 @@ binds {
     // shows a list of important hotkeys.
     Mod+Shift+Slash { show-hotkey-overlay; }
 
+    // Open Applications
     CTRL+Alt+t hotkey-overlay-title="Open a Terminal: foot" { spawn "foot"; }
     CTRL+Alt+f hotkey-overlay-title="Open Browser: firefox" { spawn "firefox"; }
+    CTRL+Alt+o hotkey-overlay-title="Open Obsidian" { spawn "flatpak" "run" "md.obsidian.Obsidian"; }
     Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
-    // Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
+    Mod+E hotkey-overlay-title="Open Yazi" { spawn "foot" "--app-id=foot-yazi" "-e" "yazi" "~"; }
+    Mod+Shift+Escape hotkey-overlay-title="Open Btop" { spawn "foot" "--app-id=foot-btop" "-e" "btop" ; }
 
-    // Use spawn-sh to run a shell command. Do this if you need pipes, multiple commands, etc.
-    // Note: the entire command goes as a single argument. It's passed verbatim to `sh -c`.
-    // For example, this is a standard bind to toggle the screen reader (orca).
-    Super+Alt+S allow-when-locked=true hotkey-overlay-title=null { spawn-sh "pkill orca || exec orca"; }
 
-    // Example volume keys mappings for PipeWire & WirePlumber.
-    // The allow-when-locked=true property makes them work even when the session is locked.
-    // Using spawn-sh allows to pass multiple arguments together with the command.
+
+    // Volume keys mappings for PipeWire & WirePlumber.
     // "-l 1.0" limits the volume to 100%.
     XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0"; }
     XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
     XF86AudioMute        allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
     XF86AudioMicMute     allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
 
-    // Example media keys mapping using playerctl.
-    // This will work with any MPRIS-enabled media player.
+    // Media keys mapping using playerctl.
     XF86AudioPlay        allow-when-locked=true { spawn-sh "playerctl play-pause"; }
     XF86AudioStop        allow-when-locked=true { spawn-sh "playerctl stop"; }
     XF86AudioPrev        allow-when-locked=true { spawn-sh "playerctl previous"; }
     XF86AudioNext        allow-when-locked=true { spawn-sh "playerctl next"; }
 
-    // Example brightness key mappings for brightnessctl.
-    // You can use regular spawn with multiple arguments too (to avoid going through "sh"),
-    // but you need to manually put each argument in separate "" quotes.
-    XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
-    XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
+    // Brightness key mappings 
+    // XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
+    // XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
+
+  XF86MonBrightnessUp allow-when-locked=true { spawn "bash" "-c" "brightnessctl --class=backlight set +10% && quickshell ipc call brightness set $(brightnessctl -m --class=backlight | cut -d, -f4 | tr -d '%')"; }
+  XF86MonBrightnessDown allow-when-locked=true { spawn "bash" "-c" "brightnessctl --class=backlight set 10%- && quickshell ipc call brightness set $(brightnessctl -m --class=backlight | cut -d, -f4 | tr -d '%')"; }
 
     // Open/close the Overview: a zoomed-out view of workspaces and windows.
     // You can also move the mouse into the top-left hot corner,
@@ -440,7 +464,7 @@ binds {
     Mod+BracketRight { consume-or-expel-window-right; }
 
     // Consume one window from the right to the bottom of the focused column.
-    Mod+Comma  { consume-window-into-column; }
+    // Mod+Comma  { consume-window-into-column; }
     // Expel the bottom window from the focused column to the right.
     Mod+Period { expel-window-from-column; }
 
@@ -497,6 +521,8 @@ binds {
     Print { screenshot; }
     Ctrl+Print { screenshot-screen; }
     Alt+Print { screenshot-window; }
+    Mod+Shift+S { screenshot; }
+
 
     // Applications such as remote-desktop clients and software KVM switches may
     // request that niri stops processing the keyboard shortcuts defined here
@@ -515,10 +541,38 @@ binds {
     // Powers off the monitors. To turn them back on, do any input like
     // moving the mouse or pressing any other key.
     Mod+Shift+P { power-off-monitors; }
+    
+    // Trigger quickshell lockscreen
+    Mod+Shift+C { spawn "qs" "ipc" "call" "lockscreen" "lock"; }
+
+    // Play/Pause Media
+    Mod+P {spawn "playerctl" "play-pause"; }
+}
+
+// Overview
+overview {
+  backdrop-color "#0A080A"
 }
 
 // Theme
 cursor {
-	xcursor-theme "BreezeX"
+	xcursor-theme "BreezeX-Light"
 	xcursor-size 24
 }
+
+// use igpu
+debug {
+  ignore-drm-device "/dev/dri/renderD129"
+}
+
+// Autostart
+spawn-at-startup "wbg" "/home/ydvo/Pictures/Wallpapers/sleepytsap1-ascii-art.png"
+spawn-at-startup "pipewire"
+spawn-at-startup "wlsunset-run"
+spawn-at-startup "quickshell"
+spawn-at-startup "swayidle" "-w"
+
+spawn-at-startup "env" "QT_QPA_PLATFORMTHEME=gtk3" "qs" "-c" "noctalia-shell"
+
+include "./noctalia.kdl"
+
