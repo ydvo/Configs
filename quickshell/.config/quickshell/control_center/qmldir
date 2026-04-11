@@ -1,0 +1,10 @@
+module ControlCenter
+Battery 1.0 Battery.qml
+BatteryPopup 1.0 BatteryPopup.qml
+Date 1.0 Date.qml
+Volume 1.0 Volume.qml
+VolumePopup 1.0 VolumePopup.qml
+MixerEntry 1.0 MixerEntry.qml
+Wifi 1.0 Wifi.qml
+WifiPopup 1.0 WifiPopup.qml
+WifiNetworkEntry 1.0 WifiNetworkEntry.qml

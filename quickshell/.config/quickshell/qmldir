@@ -1,0 +1,5 @@
+singleton Theme Theme.qml
+singleton Time Time.qml
+Clock 1.0 Clock.qml
+VolumeBar 1.0 VolumeBar.qml
+BrightnessBar 1.0 BrightnessBar.qml
