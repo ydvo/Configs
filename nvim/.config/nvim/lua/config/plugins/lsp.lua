@@ -52,6 +52,7 @@ return {
       vim.lsp.enable('ruff')
       vim.lsp.enable('clangd')
       vim.lsp.enable('sourcekit')
+      vim.lsp.enable('qmlls')
     end,
   }
 }

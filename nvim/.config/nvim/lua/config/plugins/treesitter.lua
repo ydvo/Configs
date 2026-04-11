@@ -83,7 +83,10 @@ return {
       'notify',
       'blink-cmp-menu',
       'alpha',
-      'lazy_backdrop'
+      'lazy_backdrop',
+      'oil',
+      'oil-preview',
+
     }
 
     -- Auto-install parsers and enable highlighting on FileType
