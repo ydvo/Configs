@@ -122,8 +122,11 @@ ShellRoot {
                     status: battery.status
                     charging: battery.charging
                     onVisibleChanged: {
-                        if (!visible)
+                        if (visible) {
+                            window.closeAllPopups(battery);
+                        } else {
                             battery.popupOpen = false;
+                        }
                     }
                 }
 
@@ -134,8 +137,11 @@ ShellRoot {
                     anchors.right: parent.right
 
                     onVisibleChanged: {
-                        if (!visible)
+                        if (visible) {
+                            window.closeAllPopups(volume);
+                        } else {
                             volume.popupOpen = false;
+                        }
                     }
                 }
 
@@ -146,10 +152,22 @@ ShellRoot {
                     anchors.right: parent.right
 
                     onVisibleChanged: {
-                        if (!visible)
+                        if (visible) {
+                            window.closeAllPopups(wifi);
+                        } else {
                             wifi.popupOpen = false;
+                        }
                     }
                 }
+            }
+
+            function closeAllPopups(except) {
+                if (except !== battery)
+                    battery.popupOpen = false;
+                if (except !== volume)
+                    volume.popupOpen = false;
+                if (except !== wifi)
+                    wifi.popupOpen = false;
             }
         }
     }
