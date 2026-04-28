@@ -572,7 +572,5 @@ spawn-at-startup "wlsunset-run"
 spawn-at-startup "quickshell"
 spawn-at-startup "swayidle" "-w"
 
-spawn-at-startup "env" "QT_QPA_PLATFORMTHEME=gtk3" "qs" "-c" "noctalia-shell"
-
-include "./noctalia.kdl"
+include "./theme.kdl"
 
