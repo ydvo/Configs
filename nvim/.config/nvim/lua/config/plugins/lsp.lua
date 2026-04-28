@@ -22,26 +22,13 @@ return {
         },
       })
 
-      -- setup clang for use with esp-idf
       vim.lsp.config("clangd", {
-        cmd = {
-          "/home/ydvo/.espressif/tools/esp-clang/esp-19.1.2_20250312/esp-clang/bin/clangd",
-          "--background-index",
-          "--compile-commands-dir=build.clang",
-          "--query-driver=/home/ydvo/.espressif/tools/**",
-        },
-      })
-
-      -- setup sourcekit for use without dynamic registration from swift install instructions
-      vim.lsp.config("sourcekit", {
-        capabilities = {
-          workspace = {
-            didChangeWatchedFiles = {
-              dynamicRegistration = true,
-            },
-          },
-        },
-        filetypes = { 'swift' },
+        -- cmd = {
+        --   "/home/ydvo/.espressif/tools/esp-clang/esp-19.1.2_20250312/esp-clang/bin/clangd",
+        --   "--background-index",
+        --   "--compile-commands-dir=build.clang",
+        --   "--query-driver=/home/ydvo/.espressif/tools/**",
+        -- },
       })
 
       -- enable server configurations
@@ -51,7 +38,6 @@ return {
       vim.lsp.enable('ty')
       vim.lsp.enable('ruff')
       vim.lsp.enable('clangd')
-      vim.lsp.enable('sourcekit')
       vim.lsp.enable('qmlls')
     end,
   }
