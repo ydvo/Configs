@@ -41,7 +41,6 @@ set("n", "~~", userfunctions.terminal_toggle())
 -- Terminal mode mapping: leave terminal or hide it
 set("t", "~~", "<C-\\><C-n>:hide<CR>")
 
-
 -- Set mappings
 set("i", "(", userfunctions.autopair("(", ")"), { expr = true })
 set("i", "[", userfunctions.autopair("[", "]"), { expr = true })
@@ -110,6 +109,7 @@ vim.api.nvim_create_autocmd("FileType", {
     set("n", "<leader>t", userfunctions.typstwatch(), { noremap = true, silent = true })
     -- $ autopair
     set("i", "$", userfunctions.autopair_quotes("$"), { expr = true })
+    set("i", "|", userfunctions.autopair_quotes("|"), { expr = true })
   end
 })
 
