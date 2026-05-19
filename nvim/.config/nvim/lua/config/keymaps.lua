@@ -32,6 +32,9 @@ set("n", "<leader>h", "<cmd>LspClangdSwitchSourceHeader<CR>")
 -- Oil
 set("n", "-", "<cmd>Oil<CR>")
 
+-- Neogen
+set("n", "<leader>d", "<cmd>lua require('neogen').generate()<CR>", { desc = "Generate function documentation" })
+
 -- -- sc-im
 -- set('n', '<leader>sc', ":lua require'sc-im'.open_in_scim()<CR>", { desc = "Open sc-im", noremap = true, silent = true })
 
