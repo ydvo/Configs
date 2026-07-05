@@ -88,47 +88,6 @@ function M.typstwatch()
   end
 end
 
--- Toggle Writing Mode
-local writing_mode = {
-  enabled = false,
-  background = nil,
-  colorscheme = nil,
-}
-
-function ToggleWritingMode()
-  if not writing_mode.enabled then
-    -- Save state
-    writing_mode.background = vim.o.background
-    writing_mode.colorscheme = vim.g.colors_name
-
-    -- Enable writing mode
-    vim.o.background = "light"
-    vim.cmd("colorscheme koda")
-
-    -- vim.cmd("ZenMode")
-    vim.cmd("PencilSoft")
-
-    writing_mode.enabled = true
-  else
-    -- Restore state
-    -- vim.cmd("ZenMode")
-    vim.cmd("PencilOff")
-
-    if writing_mode.background then
-      vim.o.background = writing_mode.background
-    end
-
-    if writing_mode.colorscheme then
-      vim.cmd("colorscheme " .. writing_mode.colorscheme)
-    end
-
-    writing_mode.enabled = false
-  end
-end
-
--- Create callable command
-vim.api.nvim_create_user_command("WriteMode", ToggleWritingMode, {})
-
 -- AutoCommands
 -- Auto Format on save
 vim.api.nvim_create_autocmd('LspAttach', {
