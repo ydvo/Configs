@@ -1,0 +1,26 @@
+require('lazydev').setup()
+
+-- Server configs
+vim.lsp.config('tinymist', {
+  settings = {
+    formatterMode = "typstyle",
+  },
+})
+
+vim.lsp.config("clangd", {
+  -- cmd = {
+  --   "/home/ydvo/.espressif/tools/esp-clang/esp-19.1.2_20250312/esp-clang/bin/clangd",
+  --   "--background-index",
+  --   "--compile-commands-dir=build.clang",
+  --   "--query-driver=/home/ydvo/.espressif/tools/**",
+  -- },
+})
+
+-- enable server configurations
+vim.lsp.enable('lua_ls')
+vim.lsp.enable('rust_analyzer')
+vim.lsp.enable('tinymist')
+vim.lsp.enable('ty')
+vim.lsp.enable('ruff')
+vim.lsp.enable('clangd')
+vim.lsp.enable('qmlls')

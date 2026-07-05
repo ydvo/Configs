@@ -1,7 +1,10 @@
 -- Keymaps
-local userfunctions = require("config.user_functions")
+local userfunctions = require("user_functions")
 
 local set = vim.keymap.set
+
+-- Leader
+vim.g.mapleader = " "
 
 -- Execute
 set("n", "<space><space>x", "<cmd>source %<CR>")
@@ -12,31 +15,30 @@ set("v", "<space>x", ":lua<CR>")
 set("n", "<leader>bd", "<cmd>bprevious <bar> bdelete #<CR>", { desc = "Delete buffer" })
 
 -- Fzf
-set("n", "<leader>ff", require('fzf-lua').files, { desc = "Fzf Files" })
-set("n", "<leader>fg", require('fzf-lua').live_grep, { desc = "Live grep" })
-set("n", "<leader>fb", require('fzf-lua').buffers, { desc = "Search Buffers" })
-set("n", "<leader>fm", require('fzf-lua').marks, { desc = "Search marks" })
-set("n", "<leader>fh", require('fzf-lua').helptags, { desc = "Search help" })
-set("n", "<leader>fs", require('fzf-lua').lsp_document_symbols, { desc = "Search LSP symbols" })
-set("n", "<leader>fe", require('fzf-lua').lsp_document_diagnostics, { desc = "Search LSP diagnostics" })
+vim.keymap.set("n", "<leader>ff", "<cmd>lua require('fzf-lua').files()<CR>", { desc = "Fzf Files" })
+vim.keymap.set("n", "<leader>fg", "<cmd>lua require('fzf-lua').live_grep()<CR>", { desc = "Live grep" })
+vim.keymap.set("n", "<leader>fb", "<cmd>lua require('fzf-lua').buffers()<CR>", { desc = "Search Buffers" })
+vim.keymap.set("n", "<leader>fm", "<cmd>lua require('fzf-lua').marks()<CR>", { desc = "Search marks" })
+vim.keymap.set("n", "<leader>fh", "<cmd>lua require('fzf-lua').helptags()<CR>", { desc = "Search help" })
+vim.keymap.set("n", "<leader>fs", "<cmd>lua require('fzf-lua').lsp_document_symbols()<CR>",
+  { desc = "Search LSP symbols" })
+vim.keymap.set("n", "<leader>fe", "<cmd>lua require('fzf-lua').lsp_document_diagnostics()<CR>",
+  { desc = "Search LSP diagnostics" })
 
 -- Diagnostic
 set("n", "gl", "<cmd>lua vim.diagnostic.open_float()<CR>")
+set("n", "<leader>d", vim.diagnostic.setqflist, { desc = "Add buffer diagnostics to quickfix list" })
 
 -- LSP
 set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>")
 set("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", { desc = "Rename variable" })
 set("n", "<leader>h", "<cmd>LspClangdSwitchSourceHeader<CR>")
 
-
 -- Oil
 set("n", "-", "<cmd>Oil<CR>")
 
 -- Neogen
-set("n", "<leader>d", "<cmd>lua require('neogen').generate()<CR>", { desc = "Generate function documentation" })
-
--- -- sc-im
--- set('n', '<leader>sc', ":lua require'sc-im'.open_in_scim()<CR>", { desc = "Open sc-im", noremap = true, silent = true })
+set("n", "<leader>D", "<cmd>lua require('neogen').generate()<CR>", { desc = "Generate function documentation" })
 
 -- Terminal
 set("n", "~~", userfunctions.terminal_toggle())
