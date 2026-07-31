@@ -10,6 +10,7 @@ require("nvim-treesitter").setup({
     "python",
     "gitignore",
     "typst",
+    "rust"
   },
 
   highlight = {
