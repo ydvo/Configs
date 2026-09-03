@@ -22,7 +22,7 @@ vim.keymap.set("n", "<leader>fm", "<cmd>lua require('fzf-lua').marks()<CR>", { d
 vim.keymap.set("n", "<leader>fh", "<cmd>lua require('fzf-lua').helptags()<CR>", { desc = "Search help" })
 vim.keymap.set("n", "<leader>fs", "<cmd>lua require('fzf-lua').lsp_document_symbols()<CR>",
   { desc = "Search LSP symbols" })
-vim.keymap.set("n", "<leader>fe", "<cmd>lua require('fzf-lua').lsp_document_diagnostics()<CR>",
+vim.keymap.set("n", "<leader>fd", "<cmd>lua require('fzf-lua').lsp_document_diagnostics()<CR>",
   { desc = "Search LSP diagnostics" })
 
 -- Diagnostic
