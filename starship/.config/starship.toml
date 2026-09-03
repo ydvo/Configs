@@ -17,14 +17,14 @@ add_newline = false
 [directory]
 truncation_length = 5           # Show more path context than default (3)
 truncate_to_repo = true         # Still truncate smartly in git repos
-style = "bright-blue"              
+style = "bright-blue"              # medium‑dark blue (looks good on Mint)
 read_only = "  "                  # optional lock icon for read‑only dirs
 
 [character]
 vimcmd_symbol = "[❮](green)"
 
 [git_branch]
-symbol = ""
+symbol = " " 
 format = "[$symbol$branch]($style)"
 # style = "bright-black"
 
