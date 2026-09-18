@@ -20,9 +20,9 @@ vim.pack.add({
   "https://github.com/folke/lazydev.nvim",
 
   --Leet
-  "https://github.com/kawre/leetcode.nvim",
-  "https://github.com/nvim-lua/plenary.nvim",
-  "https://github.com/MunifTanjim/nui.nvim",
+  -- "https://github.com/kawre/leetcode.nvim",
+  -- "https://github.com/nvim-lua/plenary.nvim",
+  -- "https://github.com/MunifTanjim/nui.nvim",
 
   -- Neogen
   "https://github.com/danymat/neogen",
@@ -47,6 +47,6 @@ vim.pack.add({
 -- One line cfgs
 require("oil").setup({})
 require("neogen").setup({})
-require("leetcode").setup({
-  lang = "cpp",
-})
+-- require("leetcode").setup({
+--   lang = "cpp",
+-- })
