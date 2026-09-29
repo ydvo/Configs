@@ -40,6 +40,9 @@ vim.pack.add({
   -- Whichkey
   "https://github.com/folke/which-key.nvim",
 
+  -- Icons
+  "https://github.com/nvim-tree/nvim-web-devicons",
+
   -- Zen
   "https://github.com/folke/zen-mode.nvim"
 })

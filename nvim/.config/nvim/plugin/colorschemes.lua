@@ -1,6 +1,7 @@
-require("silentium").setup({
-  accent = "#fdbb4a",
-  dark = "#131313"
+local silentium = require("silentium")
+silentium.setup({
+  accent = silentium.accents.lavender
+  -- dark = "#131313"
 })
 
 vim.cmd.colorscheme "silentium"

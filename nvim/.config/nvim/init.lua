@@ -22,6 +22,14 @@ vim.opt.sidescrolloff = 8         -- margin left/right of cursor
 vim.opt.fillchars = { eob = " " } -- hide ~ on end of buffer
 vim.opt.exrc = true               -- allows local cfgs
 vim.opt.linebreak = true
+--
+-- Ubuntu Foot Term fix
+  vim.api.nvim_create_autocmd("VimEnter", {
+    callback = function() io.stdout:write("\027[>1u") end,
+  })
+  vim.api.nvim_create_autocmd("VimLeavePre", {
+    callback = function() io.stdout:write("\027[<1u") end,
+  })
 
 -- Requires
 require("keymaps")
