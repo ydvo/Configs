@@ -2,7 +2,7 @@
 
 palette = "leo"
 
-format = "${env_var.ssh}${env_var.tmux}$directory${custom.brazil}$git_branch$git_state$git_status$cmd_duration$line_break$python $character"
+format = "${env_var.ssh}${env_var.tmux}$directory${custom.brazil}${custom.brazil_state}$git_branch$git_state$git_status$cmd_duration$line_break$python $character"
 
 # Amazon Leo ("krypton") palette — tuned for dark backgrounds
 [palettes.leo]
@@ -12,6 +12,7 @@ slate      = "#7A8B99"   # muted blue-gray — secondary / git
 slate_dk   = "#5C6B78"   # darker slate — tmux indicator
 fog        = "#C8D1D9"   # light neutral — primary text (directory)
 red        = "#E05561"   # error
+amber      = "#E0A458"   # warning — workspace out of sync / stale
 
 [username]
 disabled = true
@@ -47,11 +48,22 @@ description = "Indicates an active tmux session"
 # the script and the module shows only when it exits 0 (i.e. inside a workspace);
 # `command` then produces the actual text to display.
 [custom.brazil]
-command = "$HOME/Configs/starship/.config/starship-brazil.sh"
-when = "$HOME/Configs/starship/.config/starship-brazil.sh"
+command = "$HOME/Configs/starship/.config/starship-brazil.sh name"
+when = "$HOME/Configs/starship/.config/starship-brazil.sh name"
 shell = ["bash", "--noprofile", "--norc"]
 format = "[in ](slate)[$output](krypton_lt) "
 description = "Current Brazil workspace and package"
+
+# Version-set sync state, rendered in amber next to the workspace name (like a
+# git status flag). Shows "behind" when the authoritative out-of-band check
+# (starship-brazil-check.sh) found the VS moved ahead, or "stale?" as a cheap
+# local nudge when metadata hasn't been synced in a while. Hidden when in sync.
+[custom.brazil_state]
+command = "$HOME/Configs/starship/.config/starship-brazil.sh state"
+when = "$HOME/Configs/starship/.config/starship-brazil.sh state"
+shell = ["bash", "--noprofile", "--norc"]
+format = "[$output](amber) "
+description = "Brazil workspace version-set sync state"
 
 [character]
 success_symbol = "[❯](krypton)"
