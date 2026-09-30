@@ -1,36 +1,70 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-format = """
-$username\
-$hostname\
-$directory\
-$git_branch\
-$git_state\
-$git_status\
-$cmd_duration\
-$line_break\
-$python\
-$character"""
+palette = "leo"
 
-add_newline = false
+format = "${env_var.ssh}${env_var.tmux}$directory${custom.brazil}$git_branch$git_state$git_status$cmd_duration$line_break$python $character"
+
+# Amazon Leo ("krypton") palette — tuned for dark backgrounds
+[palettes.leo]
+krypton    = "#8A5CF6"   # Leo krypton purple — primary accent
+krypton_lt = "#B79CFB"   # lighter krypton — readable purple for text
+slate      = "#7A8B99"   # muted blue-gray — secondary / git
+slate_dk   = "#5C6B78"   # darker slate — tmux indicator
+fog        = "#C8D1D9"   # light neutral — primary text (directory)
+red        = "#E05561"   # error
+
+[username]
+disabled = true
+
+[hostname]
+disabled = true
+ssh_only = true
+
+[rust]
+disabled = true
+
+[package]
+disabled = true
 
 [directory]
-truncation_length = 5           # Show more path context than default (3)
-truncate_to_repo = true         # Still truncate smartly in git repos
-style = "bright-blue"              # medium‑dark blue (looks good on Mint)
-read_only = "  "                  # optional lock icon for read‑only dirs
+style = "fog"
+
+# SSH indicator — shows ☁ only when connected over SSH (SSH_CONNECTION is set).
+[env_var.ssh]
+variable = "SSH_CONNECTION"
+format = "[󰅣](slate_dk)  "
+description = "Indicates an active SSH session"
+
+# tmux indicator — shows ⧉ only when inside a tmux session (TMUX is set).
+[env_var.tmux]
+variable = "TMUX"
+format = "[⧉](slate_dk)  "
+description = "Indicates an active tmux session"
+
+# Brazil workspace:package indicator — only shows inside a Brazil workspace.
+# Runs the detector script inline at render time, so it is never stale: the
+# value updates immediately when entering or leaving a workspace. `when` runs
+# the script and the module shows only when it exits 0 (i.e. inside a workspace);
+# `command` then produces the actual text to display.
+[custom.brazil]
+command = "$HOME/Configs/starship/.config/starship-brazil.sh"
+when = "$HOME/Configs/starship/.config/starship-brazil.sh"
+shell = ["bash", "--noprofile", "--norc"]
+format = "[in ](slate)[$output](krypton_lt) "
+description = "Current Brazil workspace and package"
 
 [character]
-vimcmd_symbol = "[❮](green)"
+success_symbol = "[❯](krypton)"
+error_symbol = "[❯](red)"
+vimcmd_symbol = "[❮](krypton_lt)"
 
 [git_branch]
-symbol = " " 
-format = "[$symbol$branch]($style)"
-# style = "bright-black"
+format = "[$branch]($style)"
+style = "slate"
 
 [git_status]
-format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)]($ahead_behind$stashed)]($style)"
-# style = "cyan"
+format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](krypton_lt) ($ahead_behind$stashed)]($style)"
+style = "slate"
 conflicted = "​"
 untracked = "​"
 modified = "​"
@@ -38,19 +72,17 @@ staged = "​"
 renamed = "​"
 deleted = "​"
 stashed = "≡"
-ahead = "↑"
-behind = "↓"
 
 [git_state]
 format = '\([$state( $progress_current/$progress_total)]($style)\) '
-style = "bright-black"
+style = "slate"
 
 [cmd_duration]
-format = " [$duration]($style) "
-style = "yellow"
+format = "[$duration]($style) "
+style = "krypton_lt"
 
 [python]
 format = "[$virtualenv]($style) "
-style = "bright-black"
+style = "slate"
 detect_extensions = []
 detect_files = []
