@@ -126,3 +126,13 @@ vim.api.nvim_create_autocmd("FileType", {
     set("n", "<leader>b", ":!python3 %<CR>", { noremap = true, silent = true })
   end
 })
+
+-- hledger
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "ledger",
+  callback = function(args)
+    vim.keymap.set("i", "<C-d>", function()
+      return vim.fn.strftime("%Y/%m/%d")
+    end, { buffer = args.buf, expr = true })
+  end,
+})

@@ -1,4 +1,3 @@
--- user_functions.lua
 --    collection of user defined functions
 local M = {}
 local terminal_bufnr = nil
