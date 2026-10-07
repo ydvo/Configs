@@ -1,0 +1,33 @@
+# swaylock. Docs: man 5 swaylock
+# Dark lock screen with Leo/Kuiper purple accent (colors are RRGGBB[AA], no #).
+ignore-empty-password
+show-failed-attempts
+indicator-caps-lock
+
+font=Ubuntu
+font-size=24
+
+color=141212
+indicator-radius=90
+indicator-thickness=5
+
+inside-color=141212
+inside-ver-color=141212
+inside-clear-color=141212
+inside-wrong-color=141212
+
+ring-color=242424
+ring-ver-color=b499ff
+ring-clear-color=b499ff
+ring-wrong-color=ffb4ab
+
+key-hl-color=b499ff
+bs-hl-color=ffb4ab
+
+text-color=ffffff
+text-ver-color=ffffff
+text-clear-color=ffffff
+text-wrong-color=ffffff
+
+line-color=00000000
+separator-color=00000000
