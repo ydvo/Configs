@@ -3,6 +3,8 @@
 ignore-empty-password
 show-failed-attempts
 indicator-caps-lock
+image=/home/ANT.AMAZON.COM/yandvo/Pictures/Wallpapers/AmazonLeo_Aurora_blur.png
+scaling=fill
 
 font=Ubuntu
 font-size=24
