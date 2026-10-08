@@ -198,6 +198,10 @@ user_pref("layout.word_select.eat_space_to_next_word", false);
 // visit https://github.com/yokoffing/Betterfox/wiki/Optional-Hardening
 // Enter your personal overrides below this line:
 
+/** HOME PAGE ***/
+user_pref("browser.startup.homepage", "about:blank");
+user_pref("browser.startup.page", 1); // 1 = show homepage on startup
+
 
 /****************************************************************************
  * END: BETTERFOX                                                           *

@@ -6,12 +6,13 @@ format = "${env_var.ssh}${env_var.tmux}$directory${custom.brazil}$git_branch$git
 
 # Amazon Leo ("krypton") palette — tuned for dark backgrounds
 [palettes.leo]
-krypton    = "#8A5CF6"   # Leo krypton purple — primary accent
-krypton_lt = "#B79CFB"   # lighter krypton — readable purple for text
-slate      = "#7A8B99"   # muted blue-gray — secondary / git
-slate_dk   = "#5C6B78"   # darker slate — tmux indicator
-fog        = "#C8D1D9"   # light neutral — primary text (directory)
-red        = "#E05561"   # error
+krypton    = "#8750FF"   # Leo krypton purple — primary accent
+krypton_lt = "#B499FF"   # lighter krypton — readable purple for text
+slate      = "#888B91"   # muted blue-gray — secondary / git
+slate_dk   = "#454A51"   # darker slate — tmux indicator
+fog        = "#F5F3EF"   # light neutral — primary text (directory)
+red        = "#ffb4ab"   # error
+amber      = "#FF6200"   # warning — workspace out of sync / stale
 
 [username]
 disabled = true

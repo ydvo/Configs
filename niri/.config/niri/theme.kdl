@@ -1,13 +1,15 @@
+// Main highlight: Amazon Leo / Kuiper purple (#B499FF).
+// Swap #B499FF (and the dim #5C00D3) if your team brand guide specifies another purple.
 layout {
 
     focus-ring {
-        active-color   "#fdbb4a"
+        active-color   "#B499FF"
         inactive-color "#131313"
         urgent-color   "#ffb4ab"
     }
 
     border {
-        active-color   "#fdbb4a"
+        active-color   "#B499FF"
         inactive-color "#131313"
         urgent-color   "#ffb4ab"
     }
@@ -17,19 +19,19 @@ layout {
     }
 
     tab-indicator {
-        active-color   "#fdbb4a"
-        inactive-color "#614000"
+        active-color   "#B499FF"
+        inactive-color "#5C00D3"
         urgent-color   "#ffb4ab"
     }
 
     insert-hint {
-        color "#fdbb4a80"
+        color "#B499FF80"
     }
 }
 
 recent-windows {
     highlight {
-        active-color "#fdbb4a"
+        active-color "#B499FF"
         urgent-color "#ffb4ab"
     }
 }

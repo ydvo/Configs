@@ -1,0 +1,34 @@
+# mako notification daemon. Docs: man 5 mako
+# Shown on the Lenovo (DVI-I-2); mako falls back to the focused output when
+# that one isn't connected (e.g. laptop undocked).
+output=DVI-I-2
+anchor=top-right
+layer=overlay
+
+font=Ubuntu 11
+width=360
+height=120
+margin=12
+padding=14
+border-size=2
+border-radius=12
+icons=1
+max-icon-size=48
+
+default-timeout=10000
+max-visible=5
+max-history=50
+
+# Dark surface with the Leo/Kuiper purple accent.
+background-color=#0F141A
+text-color=#ffffff
+border-color=#B499FF
+progress-color=over #B499FF2a
+
+[urgency=low]
+border-color=#3a3a3a
+default-timeout=8000
+
+[urgency=critical]
+border-color=#ffb4ab
+default-timeout=0

@@ -1,0 +1,87 @@
+/* GNOME/Ubuntu-style top bar: flat black, centered clock, right status pill.
+   Accent is Leo/Kuiper purple (#8750ff). Font is the patched Ubuntu Nerd Font. */
+
+* {
+    font-family: "Ubuntu Nerd Font", "Ubuntu", sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+    border-radius: 0;
+    min-height: 0;
+}
+
+window#waybar {
+    background: #141212;
+    color: #ffffff;
+}
+
+/* ---- left: workspaces + window title ---- */
+#workspaces {
+    margin-left: 4px;
+}
+
+#workspaces button {
+    padding: 0 9px;
+    margin: 4px 2px;
+    color: #888B91;
+    background: transparent;
+    border-radius: 6px;
+}
+
+#workspaces button:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+}
+
+#workspaces button.active {
+    color: #ffffff;
+    background: #8750ff;
+}
+
+#workspaces button.urgent {
+    color: #0F141A;
+    background: #ffb4ab;
+}
+
+#window {
+    color: #888B91;
+    margin-left: 8px;
+}
+
+/* ---- center: clock ---- */
+#clock {
+    font-weight: 600;
+    padding: 0 12px;
+}
+
+/* ---- right: tray + grouped status pill ---- */
+#tray {
+    padding: 0 10px;
+}
+
+#tray menu {
+    background: #0F141A;
+    color: #ffffff;
+}
+
+/* The three status modules sit flush to read as one rounded pill. */
+#network,
+#pulseaudio,
+#battery {
+    background: rgba(255, 255, 255, 0.09);
+    padding: 0 10px;
+    margin: 4px 0;
+}
+
+#network {
+    margin-left: 6px;
+    border-radius: 8px 0 0 8px;
+}
+
+#battery {
+    margin-right: 8px;
+    border-radius: 0 8px 8px 0;
+}
+
+#battery.warning  { color: #ffd480; }
+#battery.critical { color: #ffb4ab; }
