@@ -12,3 +12,34 @@ run = "plugin mount"
 [[mgr.prepend_keymap]]
 on = "<C-n>"
 run = "shell -- ripdrag -xi %s"
+
+# Default "c c"/"c d"/"c f"/"c n" use yazi's `copy` command, which only
+# writes to yazi's own internal yank register, not the OS clipboard, so
+# pasting into another app does nothing. Pipe into wl-copy instead.
+# NB: yazi shell templates use %h/%s.. placeholders, not $0/$1 - there is
+# no positional-arg substitution, which is why an earlier attempt using
+# "$0" copied nothing.
+[[mgr.prepend_keymap]]
+on   = [ "c", "c" ]
+run  = "shell -- printf '%%s' %h | wl-copy -n"
+desc = "Copy file URL to system clipboard"
+
+[[mgr.prepend_keymap]]
+on   = [ "c", "d" ]
+run  = "shell -- dirname -- %h | tr -d '\\n' | wl-copy -n"
+desc = "Copy directory URL to system clipboard"
+
+[[mgr.prepend_keymap]]
+on   = [ "c", "f" ]
+run  = "shell -- basename -- %h | tr -d '\\n' | wl-copy -n"
+desc = "Copy filename to system clipboard"
+
+[[mgr.prepend_keymap]]
+on   = [ "c", "n" ]
+run  = "shell -- basename -- %h | sed 's/\\.[^.]*$//' | tr -d '\\n' | wl-copy -n"
+desc = "Copy filename without extension to system clipboard"
+
+[[mgr.prepend_keymap]]
+on   = [ "c", "C" ]
+run  = "shell -- wl-copy -n < %h"
+desc = "Copy file content to system clipboard"

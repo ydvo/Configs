@@ -20,6 +20,12 @@ environment {
     GTK_IM_MODULE ""
     QT_IM_MODULE ""
     XMODIFIERS "@im=none"
+
+    // foot (and anything else niri spawns directly) does not source
+    // ~/.bashrc, so EDITOR/VISUAL must be set here too or tools like
+    // yazi's file opener fall back to vi.
+    EDITOR "nvim"
+    VISUAL "nvim"
 }
 
 // Input device configuration.
