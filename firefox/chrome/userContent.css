@@ -1,5 +1,62 @@
 /* userContent.css */
+
+/* Leo-themed Tridactyl colours (midnight variable set + shydactyl layout,
+ * recoloured with the Leo brand palette from ~/Configs/theme/palette.md).
+ * Applied here instead of a `:colourscheme leo` CSS file so no native
+ * messenger / extra extension permission is required - Tridactyl reads
+ * these CSS vars straight out of the page at document-load time. */
 :root {
-  --tridactyl-hintspan-bg: #8750FF !important;
+  /* base chrome */
+  --tridactyl-bg: #0F141A !important;
+  --tridactyl-fg: #F5F3EF !important;
+  --tridactyl-font-family: "San Francisco", sans-serif !important;
+
+  /* command line */
+  --tridactyl-cmdl-bg: #0F141A !important;
+  --tridactyl-cmdl-fg: #F5F3EF !important;
+  --tridactyl-cmdl-font-size: 1.5rem !important;
+
+  /* completions */
+  --tridactyl-cmplt-bg: #0F141A !important;
+  --tridactyl-cmplt-fg: #F5F3EF !important;
+  --tridactyl-cmplt-fsel: #8750FF !important;
+  --tridactyl-cmplt-asel: #5C00D3 !important;
+  --tridactyl-cmplt-online: #B499FF !important;
+  --tridactyl-cmplt-option-height: 1.4em !important;
+
+  /* status indicator */
+  --tridactyl-status-font-size: 12px !important;
+  --tridactyl-status-font-family: "Fira Code", monospace !important;
+  --tridactyl-status-border: 1px solid #B499FF !important;
+  --tridactyl-status-border-radius: 4px !important;
+
+  /* headers / sections */
+  --tridactyl-header-font-size: 16px !important;
+  --tridactyl-header-first-bg: #0F141A !important;
+  --tridactyl-header-second-bg: #0F141A !important;
+  --tridactyl-header-third-bg: #0F141A !important;
+
+  /* "out of focus" / error indicator */
+  --tridactyl-of-fg: #0F141A !important;
+  --tridactyl-of-bg: #ffb4ab !important;
+
+  /* hint mode (link hints) */
   --tridactyl-hintspan-fg: #0F141A !important;
+  --tridactyl-hintspan-bg: #8750FF !important;
+  --tridactyl-hint-active-fg: #0F141A !important;
+  --tridactyl-hint-active-bg: #B499FF !important;
+  --tridactyl-hint-active-outline: 1px solid #0F141A !important;
+  --tridactyl-hint-bg: rgba(135, 80, 255, 0.2) !important;
+  --tridactyl-hint-outline: 1px solid #8750FF !important;
+
+  --tridactyl-border-radius: 4px !important;
+}
+
+:root.TridactylOwnNamespace a {
+  color: #B499FF !important;
+}
+
+:root.TridactylOwnNamespace code {
+  background-color: #5C00D3 !important;
+  color: #F5F3EF !important;
 }
