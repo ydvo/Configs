@@ -24,6 +24,9 @@ vim.pack.add({
   -- "https://github.com/nvim-lua/plenary.nvim",
   -- "https://github.com/MunifTanjim/nui.nvim",
 
+  -- Markdown
+  "https://github.com/meanderingprogrammer/render-markdown.nvim",
+
   -- Neogen
   "https://github.com/danymat/neogen",
 
