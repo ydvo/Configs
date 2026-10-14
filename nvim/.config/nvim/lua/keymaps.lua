@@ -37,6 +37,15 @@ set("n", "<leader>h", "<cmd>LspClangdSwitchSourceHeader<CR>")
 -- Oil
 set("n", "-", "<cmd>Oil<CR>")
 
+-- Context handoff (yank path for pasting into kiro-cli pane; lands in system
+-- clipboard via clipboard=unnamedplus)
+set("n", "<leader>yp", function()
+  vim.fn.setreg("+", vim.fn.expand("%") .. ":" .. vim.fn.line("."))
+end, { desc = "Yank path:line" })
+set("n", "<leader>yf", function()
+  vim.fn.setreg("+", vim.fn.expand("%"))
+end, { desc = "Yank file path" })
+
 -- Neogen
 set("n", "<leader>D", "<cmd>lua require('neogen').generate()<CR>", { desc = "Generate function documentation" })
 

@@ -89,6 +89,17 @@ function M.typstwatch()
 end
 
 -- AutoCommands
+-- Auto-reload buffers when the file changes on disk (e.g. edited by kiro-cli in
+-- another tmux pane). `autoread` lets Neovim pick up external changes; the
+-- autocmd triggers `checktime` on focus/idle so stale buffers refresh when you
+-- tab back. Requires `set -g focus-events on` in tmux (already set) so that
+-- FocusGained fires across panes.
+vim.opt.autoread = true
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+  pattern = "*",
+  command = "checktime",
+})
+
 -- Auto Format on save
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
