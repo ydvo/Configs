@@ -1,0 +1,41 @@
+{
+    "umac_log": {
+        "title": "UMAC tracing log",
+        "description": "Rust tracing-subscriber fmt output used by KuiperEAR-umac-rust (umac, hmac_hphy_emulator)",
+        "url": "https://code.amazon.com/packages/KuiperEAR-umac-rust",
+        "regex": {
+            "std": {
+                "pattern": "^(?<timestamp>\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d+Z)\\s+(?<level>TRACE|DEBUG|INFO|WARN|ERROR)\\s+(?<srcfile>[^:]+):(?<srcline>\\d+):\\s+(?<body>.*)$"
+            }
+        },
+        "level-field": "level",
+        "level": {
+            "trace": "TRACE",
+            "debug": "DEBUG",
+            "info": "INFO",
+            "warning": "WARN",
+            "error": "ERROR"
+        },
+        "value": {
+            "srcfile": {
+                "kind": "string",
+                "identifier": true,
+                "description": "Rust source file that emitted the line"
+            },
+            "srcline": {
+                "kind": "integer",
+                "foreign-key": true,
+                "description": "Line number within srcfile"
+            },
+            "body": {
+                "kind": "string",
+                "description": "The log message"
+            }
+        },
+        "sample": [
+            {
+                "line": "2026-10-20T16:54:50.100404Z  INFO src/consumer/hphy.rs:72: HPHY up: PhyUpRequest { foo: 1 }"
+            }
+        ]
+    }
+}
