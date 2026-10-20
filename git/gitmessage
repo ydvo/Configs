@@ -1,0 +1,19 @@
+type(scope): short imperative summary
+
+Problem: What is wrong or missing, and why it matters. Describe the
+current behavior and its impact.
+
+Solution: What this change does to fix it.
+
+Testing: How the change was verified (e.g. `bb`, unit tests, KMM/KOTS).
+
+Issue: https://jira.kbobjects.com/browse/XXXX-0000
+
+# --- Kuiper UMAC commit convention (lines starting with '#' are dropped) ---
+# Subject: conventional-commit style -> type(scope): summary
+#   type:  fix | feat | perf | refactor | test | chore
+#   scope: optional module, e.g. (ine), (ggma), (ipc), (sdn)
+#   Keep the subject in the imperative mood and under ~72 chars.
+# Body: keep the Problem / Solution / Testing sections, blank line between each.
+# Issue: link the Jira ticket (jira.kbobjects.com). Drop the line if none.
+# cr:    do NOT add by hand -- the `cr` tool appends the CR link for you.
