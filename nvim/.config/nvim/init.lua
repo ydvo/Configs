@@ -1,6 +1,26 @@
 -- init.lua
 -- Options
 vim.opt.clipboard = "unnamedplus" -- use system clipboard
+
+-- Headless Cloud Desktop (DCV): no X11/Wayland and no clipboard tool, so Neovim
+-- would otherwise fall back to OSC 52 for BOTH copy and paste. OSC 52 *reads*
+-- (paste) are unreliable through DCV -- the terminal's base64 reply leaks into
+-- the register, so `p` pastes garbage / duplicated lines. Fix: OSC 52 for copy
+-- only (write works), and make paste read Neovim's own last yank instead of
+-- querying the terminal. Copy out to the local clipboard with `"+y` still works;
+-- paste external text in with Ctrl+Shift+V (terminal paste).
+do
+  local osc52 = require("vim.ui.clipboard.osc52")
+  local paste_from_reg = function()
+    return { vim.fn.split(vim.fn.getreg(""), "\n"), vim.fn.getregtype("") }
+  end
+  vim.g.clipboard = {
+    name = "osc52-write-only",
+    copy = { ["+"] = osc52.copy("+"), ["*"] = osc52.copy("*") },
+    paste = { ["+"] = paste_from_reg, ["*"] = paste_from_reg },
+  }
+end
+
 vim.opt.showmode = false          -- hide -- INSERT -- etc.
 vim.opt.smartcase = true          -- smart case search
 vim.opt.smartindent = true        -- smarter auto-indenting

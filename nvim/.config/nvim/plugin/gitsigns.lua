@@ -11,5 +11,7 @@ gs.setup({
     map("[c", function() gs.nav_hunk("prev") end, "Git: previous hunk")
     map("<leader>gt", gs.toggle_signs, "Git: toggle signs")
     map("<leader>gg", function() gs.setqflist("all") end, "Git: all hunks to quickfix")
+    -- Shadows the native `gp` (paste-and-advance) in git-tracked buffers.
+    map("gp", gs.preview_hunk_inline, "Git: preview hunk inline")
   end,
 })
