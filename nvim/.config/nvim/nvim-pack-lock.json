@@ -5,7 +5,7 @@
       "src": "https://github.com/goolord/alpha-nvim"
     },
     "blink.cmp": {
-      "rev": "8219b58f1c11a2fb1644d3c7116c509fa8348ec0",
+      "rev": "10198f904da1e7f77aeb0368414f871568c0d898",
       "src": "https://github.com/saghen/blink.cmp"
     },
     "blink.lib": {
@@ -17,8 +17,12 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "fzf-lua": {
-      "rev": "6995a3f8ba256a7a9949747ffbdf5a88eb8a3697",
+      "rev": "9405672f62767695d5f20db171336f7f4911ce86",
       "src": "https://github.com/ibhagwan/fzf-lua"
+    },
+    "gitsigns.nvim": {
+      "rev": "fd780920613e541cbdfac41bf711583ed49f9249",
+      "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "lazydev.nvim": {
       "rev": "ff2cbcba459b637ec3fd165a2be59b7bbaeedf0d",
@@ -37,7 +41,7 @@
       "src": "https://github.com/MunifTanjim/nui.nvim"
     },
     "nvim-lspconfig": {
-      "rev": "ac062d0d01c019c0dbdb798968f3e5d8b35c3853",
+      "rev": "45a3a444b710511c39abca3b60bb6e23a21e3de5",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-notify": {
@@ -45,7 +49,7 @@
       "src": "https://github.com/rcarriga/nvim-notify"
     },
     "nvim-treesitter": {
-      "rev": "1a4f47b03dfe92d28de7d5654c67327ef008c9e6",
+      "rev": "ca581c3436fc2b236847f5b739ebc263739e5ca6",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "nvim-treesitter-context": {

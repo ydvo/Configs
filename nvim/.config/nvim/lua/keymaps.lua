@@ -24,6 +24,11 @@ vim.keymap.set("n", "<leader>fs", "<cmd>lua require('fzf-lua').lsp_document_symb
   { desc = "Search LSP symbols" })
 vim.keymap.set("n", "<leader>fd", "<cmd>lua require('fzf-lua').lsp_document_diagnostics()<CR>",
   { desc = "Search LSP diagnostics" })
+vim.keymap.set("n", "<leader>fv", function()
+  -- Use the last search pattern (e.g. set by *), stripping \< \> word boundaries
+  local term = vim.fn.getreg('/'):gsub([[\<]], ''):gsub([[\>]], '')
+  require('fzf-lua').live_grep({ search = term })
+end, { desc = "Live grep last search term" })
 
 -- Diagnostic
 set("n", "gl", "<cmd>lua vim.diagnostic.open_float()<CR>")

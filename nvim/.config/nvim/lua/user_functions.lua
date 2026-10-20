@@ -89,17 +89,6 @@ function M.typstwatch()
 end
 
 -- AutoCommands
--- Auto-reload buffers when the file changes on disk (e.g. edited by kiro-cli in
--- another tmux pane). `autoread` lets Neovim pick up external changes; the
--- autocmd triggers `checktime` on focus/idle so stale buffers refresh when you
--- tab back. Requires `set -g focus-events on` in tmux (already set) so that
--- FocusGained fires across panes.
-vim.opt.autoread = true
-vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
-  pattern = "*",
-  command = "checktime",
-})
-
 -- Auto Format on save
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
@@ -114,7 +103,10 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end
 
     -- ensure lsp supports formatting
-    if client:supports_method('textDocument/formatting') then
+    -- Rust is handled by a dedicated rustfmt-on-save autocmd below (not via the
+    -- LSP), so skip it here to avoid double-formatting.
+    if client:supports_method('textDocument/formatting')
+      and vim.bo[args.buf].filetype ~= "rust" then
       -- create group to prevent duplicates
       local group = vim.api.nvim_create_augroup(
         "LspFormat_" .. args.buf,
@@ -127,11 +119,65 @@ vim.api.nvim_create_autocmd('LspAttach', {
         group = group,
         buffer = args.buf,
         callback = function()
-          print("Formating...")
           vim.lsp.buf.format({ bufnr = args.buf, id = client.id, timeout_ms = 1000 })
         end,
       })
     end
+  end,
+})
+
+-- Rust format-on-save via standalone rustfmt.
+-- rustfmt itself is fast (~0.5s worst case on a 7k-line file; usually <200ms).
+-- The multi-second save stalls come from routing formatting through
+-- rust-analyzer, whose requests queue behind cargo check / proc-macro work.
+-- Calling rustfmt directly keeps saves fast and still writes a formatted file
+-- (synchronous). Edition / style are read from the project's Cargo.toml and
+-- rustfmt.toml automatically, so this stays correct across all Rust projects.
+--
+-- We resolve the real binary via `rustup which rustfmt` because the rustup
+-- shim (and the Brazil s3-safe-proxy) print chatter on stderr. We use
+-- vim.system(), which keeps stdout and stderr in SEPARATE fields, so that
+-- chatter can never reach the buffer. The resolved path is cached per cwd.
+local rustfmt_cache = {}
+local function resolve_rustfmt()
+  local cwd = vim.fn.getcwd()
+  local cached = rustfmt_cache[cwd]
+  if cached ~= nil then return cached end
+  local path = "rustfmt" -- fallback
+  local res = vim.system({ "rustup", "which", "rustfmt" }, { text = true }):wait()
+  if res.code == 0 and res.stdout then
+    local line = vim.trim(res.stdout)
+    if line ~= "" then path = line end
+  end
+  rustfmt_cache[cwd] = path
+  return path
+end
+
+vim.api.nvim_create_autocmd('BufWritePre', {
+  group = vim.api.nvim_create_augroup("RustFmtOnSave", { clear = true }),
+  pattern = "*.rs",
+  callback = function(args)
+    local view = vim.fn.winsaveview()
+    local input = table.concat(vim.api.nvim_buf_get_lines(args.buf, 0, -1, false), "\n")
+    -- vim.system separates stdout/stderr: proxy/shim chatter on stderr is
+    -- discarded, only formatted code on stdout is read.
+    local res = vim.system(
+      { resolve_rustfmt(), "--emit", "stdout" },
+      { stdin = input, text = true }
+    ):wait()
+    -- Only apply on clean success with real output; on error leave the buffer
+    -- untouched so a syntax error mid-edit never blanks the file.
+    if res.code == 0 and res.stdout and res.stdout ~= "" then
+      local out = vim.split(res.stdout, "\n", { plain = true })
+      -- rustfmt's stdout ends with a trailing newline → drop the empty last
+      -- element so we don't append a blank line on every save.
+      if out[#out] == "" then table.remove(out) end
+      local cur = vim.api.nvim_buf_get_lines(args.buf, 0, -1, false)
+      if not vim.deep_equal(cur, out) then
+        vim.api.nvim_buf_set_lines(args.buf, 0, -1, false, out)
+      end
+    end
+    vim.fn.winrestview(view)
   end,
 })
 

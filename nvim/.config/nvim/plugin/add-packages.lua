@@ -15,6 +15,9 @@ vim.pack.add({
   -- Fzf
   "https://github.com/ibhagwan/fzf-lua",
 
+  -- Gitsigns
+  "https://github.com/lewis6991/gitsigns.nvim",
+
   -- Lsp
   "https://github.com/neovim/nvim-lspconfig",
   "https://github.com/folke/lazydev.nvim",
