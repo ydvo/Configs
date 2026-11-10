@@ -1,5 +1,23 @@
 -- Load all packages before configuration
 -- Should be first alphabetically in `plugin/`
+
+-- Plugin build hooks. Must be registered before vim.pack.add() so they fire on install.
+-- Rebuild blink.cmp's Rust fuzzy matcher only when it is installed/updated, asynchronously,
+-- instead of blocking startup with build():pwait() on every launch.
+vim.api.nvim_create_autocmd("PackChanged", {
+  callback = function(ev)
+    local d = ev.data
+    if d.spec.name == "blink.cmp" and (d.kind == "install" or d.kind == "update") then
+      vim.notify("Building blink.cmp...")
+      vim.system({ "cargo", "build", "--release" }, { cwd = d.path }, function(r)
+        vim.schedule(function()
+          vim.notify(r.code == 0 and "blink.cmp built" or ("blink.cmp build failed:\n" .. (r.stderr or "")))
+        end)
+      end)
+    end
+  end,
+})
+
 vim.pack.add({
   -- Alpa
   "https://github.com/goolord/alpha-nvim",

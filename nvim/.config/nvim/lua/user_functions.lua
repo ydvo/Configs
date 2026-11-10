@@ -131,8 +131,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
 -- The multi-second save stalls come from routing formatting through
 -- rust-analyzer, whose requests queue behind cargo check / proc-macro work.
 -- Calling rustfmt directly keeps saves fast and still writes a formatted file
--- (synchronous). Edition / style are read from the project's Cargo.toml and
--- rustfmt.toml automatically, so this stays correct across all Rust projects.
+-- (synchronous). Style is read from the project's rustfmt.toml automatically.
+--
+-- EDITION: rustfmt does NOT read Cargo.toml when formatting from stdin, so it
+-- defaults to edition 2015 and errors on edition-2018+ syntax (`async fn`,
+-- etc.) with exit 1 and empty stdout -- which silently skips formatting. We
+-- therefore find the nearest Cargo.toml (walking up from the file) and pass
+-- its `edition` via `--edition`. Falls back to 2021 if none is found.
 --
 -- We resolve the real binary via `rustup which rustfmt` because the rustup
 -- shim (and the Brazil s3-safe-proxy) print chatter on stderr. We use
@@ -153,16 +158,38 @@ local function resolve_rustfmt()
   return path
 end
 
+-- Find the edition from the nearest Cargo.toml above `file`. Cached per dir.
+local edition_cache = {}
+local function resolve_edition(file)
+  local dir = vim.fs.dirname(file)
+  local cached = edition_cache[dir]
+  if cached ~= nil then return cached end
+  local edition = "2021" -- fallback
+  local cargo = vim.fs.find("Cargo.toml", { path = dir, upward = true })[1]
+  if cargo then
+    for line in io.lines(cargo) do
+      local e = line:match('^%s*edition%s*=%s*"(%d+)"')
+      if e then
+        edition = e
+        break
+      end
+    end
+  end
+  edition_cache[dir] = edition
+  return edition
+end
+
 vim.api.nvim_create_autocmd('BufWritePre', {
   group = vim.api.nvim_create_augroup("RustFmtOnSave", { clear = true }),
   pattern = "*.rs",
   callback = function(args)
     local view = vim.fn.winsaveview()
     local input = table.concat(vim.api.nvim_buf_get_lines(args.buf, 0, -1, false), "\n")
+    local edition = resolve_edition(vim.api.nvim_buf_get_name(args.buf))
     -- vim.system separates stdout/stderr: proxy/shim chatter on stderr is
     -- discarded, only formatted code on stdout is read.
     local res = vim.system(
-      { resolve_rustfmt(), "--emit", "stdout" },
+      { resolve_rustfmt(), "--edition", edition, "--emit", "stdout" },
       { stdin = input, text = true }
     ):wait()
     -- Only apply on clean success with real output; on error leave the buffer
@@ -176,6 +203,18 @@ vim.api.nvim_create_autocmd('BufWritePre', {
       if not vim.deep_equal(cur, out) then
         vim.api.nvim_buf_set_lines(args.buf, 0, -1, false, out)
       end
+      print("Formatting...")
+    else
+      -- Make failures visible instead of silently skipping. First stderr line
+      -- (skipping proxy/shim chatter) is usually the real rustfmt error.
+      local msg = "rustfmt failed (exit " .. tostring(res.code) .. ")"
+      for _, l in ipairs(vim.split(res.stderr or "", "\n", { plain = true })) do
+        if l:match("error") then
+          msg = "rustfmt: " .. l
+          break
+        end
+      end
+      vim.notify(msg, vim.log.levels.WARN)
     end
     vim.fn.winrestview(view)
   end,
