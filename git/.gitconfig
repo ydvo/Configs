@@ -9,8 +9,40 @@
     diffFilter = delta --color-only
 
 [delta]
-    navigate = true  # use n and N to move between diff sections
-    dark = true      # or light = true, or omit for auto-detection
+    navigate = true      # use n and N to move between diff sections
+    dark = true          # or light = true, or omit for auto-detection
+    # line-numbers = true  # old/new line number gutter
+    # Silentium-matched look (see [delta "silentium"] below).
+    # Comment this line out to revert to delta's default styling.
+    features = silentium
+
+# Colors taken from silentium.nvim, with the Leo "Krypton on dark" purple
+# (#B499FF, ~/Configs/theme/palette.md) as the accent instead of lavender.
+# Only active while `features = silentium` is set above.
+[delta "silentium"]
+    syntax-theme = none  # silentium is near-monochrome; plain fg matches it best
+
+    # Diff backgrounds = silentium DiffDelete / DiffAdd; emph = brighter variant
+    minus-style      = syntax "#492523"
+    minus-emph-style = syntax "#7a3430"
+    plus-style       = syntax "#273C29"
+    plus-emph-style  = syntax "#3d5e40"
+
+    # Chrome: Leo purple accent, ghost/gray UI
+    file-style                    = "#B499FF" bold
+    file-decoration-style         = "#B499FF" ul
+    hunk-header-style             = file line-number syntax
+    hunk-header-decoration-style  = "#4D4D4D" box
+    hunk-header-file-style        = "#A6A6A6"
+    hunk-header-line-number-style = "#737373"
+    line-numbers-minus-style      = "#E85A4F"
+    line-numbers-plus-style       = "#5FB36A"
+    line-numbers-zero-style       = "#4D4D4D"
+    line-numbers-left-style       = "#4D4D4D"
+    line-numbers-right-style      = "#4D4D4D"
+
+[diff]
+    colorMoved = default  # moved (not changed) code gets its own color
 
 [merge]
     conflictStyle = zdiff3
