@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+# kfork — copy the Kiro session you're in so it can be opened in another terminal.
+#
+# Run from inside a Kiro chat as:  !kfork
+# Then in another terminal run:    kfork-attach
+#
+# Every fork is a normal session: it stays in history (kiro-cli chat
+# --resume-picker shows it with a "[fork]" title) and is never deleted
+# automatically. kfork-attach opens the newest one. Every fork created is
+# appended to ~/.cache/kfork/forks to make manual cleanup easy.
+set -euo pipefail
+
+SESSIONS="${KIRO_HOME:-$HOME}/.kiro/sessions"
+STATE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/kfork"
+SLOT="$STATE_DIR/slot"          # newest fork, one line: <session_id>\t<cwd>\t<session_dir>
+FORKS="$STATE_DIR/forks"        # log of every fork dir created (for manual cleanup)
+ZIP="$STATE_DIR/fork.zip"       # scratch archive, overwritten every time
+KIRO="${KIRO_CLI_PATH:-$(command -v kiro-cli)}"
+
+die() { echo "kfork: $*" >&2; exit 1; }
+
+# True if the .lock in session dir $1 belongs to a running process. Compares the
+# process start time too, so a stale lock with a recycled PID doesn't count.
+lock_alive() {
+  local lock="$1/.lock" pid ticks
+  [ -f "$lock" ] || return 1
+  read -r pid ticks < <(python3 -c 'import json,sys;d=json.load(open(sys.argv[1]));print(d["pid"],d.get("linux_start_ticks",""))' "$lock") || return 1
+  [ -r "/proc/$pid/stat" ] || return 1
+  [ -z "$ticks" ] && return 0
+  # field 22 of /proc/pid/stat = start time; strip "pid (comm)" first since comm may contain spaces
+  [ "$(sed 's/^.*) //' "/proc/$pid/stat" | awk '{print $20}')" = "$ticks" ]
+}
+
+# 1. Find the session that owns this shell: walk up our process ancestry and
+#    match against the pid in each session's .lock.
+declare -A ancestors=()
+p=$$
+while [ "$p" -gt 1 ]; do
+  ancestors[$p]=1
+  p=$(sed 's/^.*) //' "/proc/$p/stat" | awk '{print $2}')
+done
+
+src=""
+for lock in "$SESSIONS"/*/*/.lock; do
+  [ -f "$lock" ] || continue
+  pid=$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["pid"])' "$lock" 2>/dev/null) || continue
+  if [ -n "${ancestors[$pid]:-}" ] && lock_alive "$(dirname "$lock")"; then
+    src=$(dirname "$lock"); break
+  fi
+done
+[ -n "$src" ] || die "not running inside a Kiro chat (use it as  !kfork  at the Kiro prompt)"
+
+# 2. Build the archive: messages trimmed to complete JSON lines (the live chat
+#    may be mid-write), session.json with createdReason forced to "human"
+#    (tangent sessions otherwise fail to import) and the title tagged.
+mkdir -p "$STATE_DIR"
+tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
+cwd=$(python3 - "$src" "$tmp" <<'PY'
+import json, sys, os
+src, out = sys.argv[1], sys.argv[2]
+with open(os.path.join(src, "messages.jsonl")) as f, open(os.path.join(out, "messages.jsonl"), "w") as g:
+    for line in f:
+        try: json.loads(line)
+        except ValueError: break
+        g.write(line if line.endswith("\n") else line + "\n")
+s = json.load(open(os.path.join(src, "session.json")))
+if "createdReason" in s: s["createdReason"] = "human"
+t = s.get("title") or "session"
+s["title"] = t if t.startswith("[fork] ") else "[fork] " + t
+json.dump(s, open(os.path.join(out, "session.json"), "w"))
+print((s.get("workspacePaths") or [os.getcwd()])[0])
+PY
+)
+rm -f "$ZIP"
+(cd "$tmp" && zip -q "$ZIP" messages.jsonl session.json)
+
+# 3. Import as a new session, make it the one kfork-attach opens, and log it.
+out=$("$KIRO" chat _ import-session --archive "$ZIP" --cwd "$cwd")
+new_dir=$(python3 -c 'import json,sys;print(json.loads(sys.stdin.read().strip().splitlines()[-1])["data"]["path"])' <<<"$out") \
+  || die "unexpected import output: $out"
+new_id=$(basename "$new_dir")
+printf '%s\t%s\t%s\n' "$new_id" "$cwd" "$new_dir" > "$SLOT"
+printf '%s\n' "$new_dir" >> "$FORKS"
+
+echo "kfork: forked $(basename "$src") -> $new_id"
+echo "kfork: open it in another terminal with: kfork-attach"

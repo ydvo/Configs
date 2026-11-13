@@ -210,6 +210,9 @@ binds {
     Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
     Mod+E hotkey-overlay-title="Open Yazi" { spawn "foot" "--app-id=foot-yazi" "-e" "yazi" "~"; }
     Mod+Shift+Escape hotkey-overlay-title="Open Btop" { spawn "foot" "--app-id=foot-btop" "-e" "btop" ; }
+    // Open the newest Kiro fork (made with !kf on the dev desk) in a new window.
+    // bash -lc so the remote PATH has ~/.local/bin and the toolbox kiro-cli.
+    CTRL+Alt+k hotkey-overlay-title="Open last Kiro fork (dev desk)" { spawn "foot" "--app-id=foot-kfork" "-e" "ssh" "-t" "dev-dsk-yandvo-2b-54a13acd.us-east-1.amazon.com" "bash -lc kfork-attach"; }
 
     // Volume keys mappings for PipeWire & WirePlumber.
     // "-l 1.0" limits the volume to 100%.
