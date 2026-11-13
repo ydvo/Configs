@@ -31,24 +31,31 @@ lock_alive() {
   [ "$(sed 's/^.*) //' "/proc/$pid/stat" | awk '{print $20}')" = "$ticks" ]
 }
 
-# 1. Find the session that owns this shell: walk up our process ancestry and
+# 1. Find the session to copy. `kfork --from <session_dir>` copies that session
+#    (kfork-attach uses this when the newest fork is already open). Otherwise
+#    find the session that owns this shell: walk up our process ancestry and
 #    match against the pid in each session's .lock.
-declare -A ancestors=()
-p=$$
-while [ "$p" -gt 1 ]; do
-  ancestors[$p]=1
-  p=$(sed 's/^.*) //' "/proc/$p/stat" | awk '{print $2}')
-done
-
 src=""
-for lock in "$SESSIONS"/*/*/.lock; do
-  [ -f "$lock" ] || continue
-  pid=$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["pid"])' "$lock" 2>/dev/null) || continue
-  if [ -n "${ancestors[$pid]:-}" ] && lock_alive "$(dirname "$lock")"; then
-    src=$(dirname "$lock"); break
-  fi
-done
-[ -n "$src" ] || die "not running inside a Kiro chat (use it as  !kfork  at the Kiro prompt)"
+if [ "${1:-}" = "--from" ]; then
+  src="${2:?--from needs a session dir}"
+  [ -f "$src/session.json" ] || die "not a session dir: $src"
+else
+  declare -A ancestors=()
+  p=$$
+  while [ "$p" -gt 1 ]; do
+    ancestors[$p]=1
+    p=$(sed 's/^.*) //' "/proc/$p/stat" | awk '{print $2}')
+  done
+
+  for lock in "$SESSIONS"/*/*/.lock; do
+    [ -f "$lock" ] || continue
+    pid=$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["pid"])' "$lock" 2>/dev/null) || continue
+    if [ -n "${ancestors[$pid]:-}" ] && lock_alive "$(dirname "$lock")"; then
+      src=$(dirname "$lock"); break
+    fi
+  done
+  [ -n "$src" ] || die "not running inside a Kiro chat (use it as  !kf  at the Kiro prompt)"
+fi
 
 # 2. Build the archive: messages trimmed to complete JSON lines (the live chat
 #    may be mid-write), session.json with createdReason forced to "human"

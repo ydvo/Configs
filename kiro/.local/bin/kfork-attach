@@ -1,16 +1,47 @@
 #!/usr/bin/env bash
-# kfork-attach — open the session saved by the last `!kfork`.
+# kfork-attach — open the session saved by the last `!kf`.
 # Extra args are passed to `kiro-cli chat`.
 # --trust-workspace is always on: you already trusted this folder in the chat
 # you forked from. It applies to this launch only and isn't saved.
+#
+# A session can only be open in one terminal. If the newest fork is already
+# open, this makes a fresh copy of it (via kfork --from) and opens that, so
+# attaching twice gives two independent windows instead of an error.
 set -euo pipefail
 
 SLOT="${XDG_CACHE_HOME:-$HOME/.cache}/kfork/slot"
-[ -f "$SLOT" ] || { echo "kfork-attach: nothing forked yet (run !kfork in a chat)" >&2; exit 1; }
+[ -f "$SLOT" ] || { echo "kfork-attach: nothing forked yet (run !kf in a chat)" >&2; exit 1; }
 IFS=$'\t' read -r id cwd dir < "$SLOT"
 [ -d "$dir" ] || { echo "kfork-attach: fork $id no longer exists" >&2; exit 1; }
+
+# Same check kfork uses: .lock pid is running and has the recorded start time.
+is_open() {
+  python3 - "$1/.lock" <<'PY'
+import json, sys
+try:
+    d = json.load(open(sys.argv[1]))
+    stat = open(f"/proc/{d['pid']}/stat").read()
+except Exception:
+    sys.exit(1)
+ticks = d.get("linux_start_ticks")
+sys.exit(0 if not ticks or stat.rsplit(")", 1)[1].split()[19] == ticks else 1)
+PY
+}
+
+if is_open "$dir"; then
+  here=$(dirname "$(readlink -f "$0")")
+  "$here/kfork" --from "$dir" >/dev/null
+  IFS=$'\t' read -r id cwd dir < "$SLOT"
+fi
 
 # `ssh host cmd` doesn't load your profile, so ~/.local/bin may not be on PATH.
 KIRO=$(command -v kiro-cli || echo "$HOME/.local/bin/kiro-cli")
 cd "$cwd"
-exec "$KIRO" chat --resume-id "$id" --trust-workspace "$@"
+SECONDS=0
+"$KIRO" chat --resume-id "$id" --trust-workspace "$@" && rc=0 || rc=$?
+# If Kiro dies right away, keep the window open long enough to read why.
+if [ "$SECONDS" -lt 10 ]; then
+  echo "kfork-attach: kiro-cli exited after ${SECONDS}s (code $rc). Press Enter to close."
+  read -r _ || true
+fi
+exit "$rc"
