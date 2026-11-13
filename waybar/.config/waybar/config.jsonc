@@ -1,7 +1,8 @@
 {
     "layer": "top",
     "position": "top",
-    "output": ["DVI-I-2", "eDP-1"],
+    // Laptop screen only.
+    "output": ["eDP-1"],
     "height": 32,
     "spacing": 0,
 
