@@ -194,6 +194,11 @@ window-rule {
     default-column-width { proportion 0.5; }
     open-floating true
 }
+// Kiro forks (CTRL+Alt+k) open as a narrow tiled column.
+window-rule {
+    match app-id="foot-kfork"
+    default-column-width { proportion 0.33333; }
+}
 
 /***************
 * Keybinds
