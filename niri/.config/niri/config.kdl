@@ -95,11 +95,15 @@ input {
     position x=0 y=0
 }
 
-// Display arrangement (left to right): laptop (bottom-left), Lenovo, Dell.
-// Monitors top-aligned at y=0; laptop bottom-aligned (y=240 = 1440-1200).
-output "eDP-1"   { position x=0 y=1024; }      // laptop, bottom-left
-output "DVI-I-2" { position x=1920 y=0; }     // Lenovo, middle
-output "DVI-I-1" { position x=4480 y=0; }     // Dell, right
+// Display arrangement (left to right): laptop (bottom-left), then the two
+// Lenovo P27h-20 panels. Both externals are IDENTICAL models, so they are
+// matched by make/model/serial (NOT by DVI-I-1/DVI-I-2 connector names, which
+// swap between the two panels on reboot / power-on order). Serial-keyed blocks
+// pin each physical monitor to its position permanently.
+// Panels top-aligned at y=0; laptop bottom-aligned (y=1024 = 2464-1440... see note).
+output "eDP-1" { position x=0 y=1024; }                                 // laptop, bottom-left
+output "Lenovo Group Limited P27h-28 V90BWXTR" { position x=1920 y=0; } // Lenovo (serial ...XTR), middle
+output "Lenovo Group Limited P27h-28 V90BWXV0" { position x=4480 y=0; } // Lenovo (serial ...XV0), right
 
 // How windows are positioned and sized.
 // https://yalter.github.io/niri/Configuration:-Layout
@@ -200,6 +204,13 @@ window-rule {
     default-column-width { proportion 0.33333; }
 }
 
+// zoom pencil popup
+window-rule {
+      match app-id="^zoom$" title="^annotate_toolbar$"
+      open-floating true
+      open-focused false
+      default-floating-position x=16 y=16 relative-to="bottom-right"
+ }
 /***************
 * Keybinds
 ****************/
@@ -405,7 +416,7 @@ spawn-at-startup "mako"
 // GNOME provided these implicitly; niri does not, so start them here.
 spawn-at-startup "/usr/libexec/polkit-mate-authentication-agent-1"
 spawn-at-startup "nm-applet" "--indicator"
-spawn-sh-at-startup "swayidle -w timeout 300 'swaylock -f' timeout 600 'niri msg action power-off-monitors' before-sleep 'swaylock -f'"
+spawn-sh-at-startup "swayidle -w timeout 270 'notify-send -u critical -t 25000 \"Locking soon\" \"Screen locks in 30s\"; brightnessctl -s set 10%' resume 'brightnessctl -r' timeout 300 'swaylock -f' timeout 600 'niri msg action power-off-monitors' before-sleep 'swaylock -f'"
 // Xwayland for X11-only apps (e.g. Cisco AnyConnect vpnui) is handled
 // automatically by niri >= 25.08 as long as xwayland-satellite is in PATH;
 // no spawn line needed here.

@@ -1,7 +1,10 @@
 # mako notification daemon. Docs: man 5 mako
-# Shown on the Lenovo (DVI-I-2); mako falls back to the focused output when
-# that one isn't connected (e.g. laptop undocked).
-output=DVI-I-2
+# Shown on the main (center) monitor. Mako 1.8 only matches the connector
+# name (exact strcmp on wl_output name), NOT make/model/serial, so this must
+# be the port. Center Lenovo (serial ...V90BWXTR) is currently DVI-I-3; if
+# the DisplayLink ports swap after a reboot, update this. Mako falls back to
+# the focused output when the connector isn't present (e.g. undocked).
+output=DVI-I-3
 anchor=top-right
 layer=overlay
 
@@ -19,11 +22,12 @@ default-timeout=10000
 max-visible=5
 max-history=50
 
-# Dark surface with the Leo/Kuiper purple accent.
+# Dark surface with a Golden Hour accent so notifications don't blend
+# into the purple used everywhere else on the desktop.
 background-color=#0F141A
 text-color=#ffffff
-border-color=#B499FF
-progress-color=over #B499FF2a
+border-color=#FFF07A
+progress-color=over #FFF07A2a
 
 [urgency=low]
 border-color=#3a3a3a
