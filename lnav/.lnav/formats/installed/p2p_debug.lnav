@@ -2,4 +2,4 @@
 # installed (arrival vs MAC UP), rejected, or retried, plus the MAC UP/DOWN sends.
 # Use inside lnav with:  |p2p_debug      (or from a shell: lnav -f p2p_debug.lnav umac.log)
 # Remove with:  :reset-session   or   :delete-filter <pattern>
-:filter-in received contact window|enqueuing P2P|P2P key install|P2P keys of the new|installing P2P keys|When installing P2P keys|HMAC: (up|down):|bounce at:|pmm agent
+:filter-in received contact window|enqueuing P2P|P2P key install|P2P keys of the new|installing P2P keys|When installing P2P keys|HMAC: (up|down):|bounce at:|state changed to
