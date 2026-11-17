@@ -19,6 +19,7 @@ Log file navigator / viewer. Config lives in `lnav/.lnav/`:
 - `config.json` – tuning, external-editor rules, the `leo` UI theme, log demux patterns
 - `configs/leo/leo-theme.json` – custom Leo colorscheme
 - `formats/installed/umac_log.json` – custom UMAC log format
+- `formats/installed/p2p_debug.lnav` – preset filter for P2P key install debugging; run `|p2p_debug` inside lnav
 
 - Binary: `lnav` (installed to `~/.local/bin`, static binary from GitHub releases)
 - Homepage: https://github.com/tstack/lnav
